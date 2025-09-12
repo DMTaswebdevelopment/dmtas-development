@@ -15,7 +15,7 @@ import { event } from "@/app/lib/fpixel";
 // import DMTasLogo from "@/public/dmtas_assets/DMTas_Horizontal_Colour.svg";
 // import DMTasLogoWhite from "@/public/dmtas_assets/DMTas_Horizontal_Mono_Reverse.svg";
 import DMTasLogoShield from "@/public/dmtas_assets/DMTas_Logomark_Colour.svg";
-import DMTasLogoWhiteShield from "@/public/dmtas_assets/DMTas_Logomark_Colour.svg";
+import DMTasLogoWhiteShield from "@/public/dmtas_assets/DMTas_Logomark_Mono_Reverse.svg";
 
 import {
   ArrowRightCircleIcon,
