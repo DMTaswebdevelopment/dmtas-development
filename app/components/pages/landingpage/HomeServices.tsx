@@ -25,7 +25,7 @@ const HomeServices: React.FC = () => {
     if (!homeServiceRef.current) return;
 
     // Create split text animation
-    let split = new SplitText(".headerText", { type: "chars" });
+    const split = new SplitText(".headerText", { type: "chars" });
 
     // Set initial state for split characters
     gsap.set(split.chars, {

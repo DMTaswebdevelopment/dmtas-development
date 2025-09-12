@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 
-// Type definitions
-interface ClientLogo {
+// Type definitions - Fixed interface declaration
+type ClientLogo = {
   id: number;
   name: string;
   logo: string;
-}
-
-interface LogoItemElement extends HTMLDivElement {}
+};
 
 const CustomerLogosSection: React.FC = () => {
   // Sample client logos data with proper typing
@@ -273,8 +271,8 @@ const CustomerLogosSection: React.FC = () => {
           Join 500+ Companies Who Trust Us
         </h3>
         <p className="text-gray-200 text-sm max-w-2xl mx-auto">
-          From startups to Fortune 500 companies, we've helped businesses of all
-          sizes achieve their creative vision and business goals.
+          From startups to Fortune 500 companies, we&apos;ve helped businesses
+          of all sizes achieve their creative vision and business goals.
         </p>
       </div>
 
@@ -313,7 +311,7 @@ const CustomerLogosSection: React.FC = () => {
           {/* Duplicate set for seamless loop */}
           {clientLogos.map((client: ClientLogo, index: number) => (
             <div
-              key={`second-${client.id}`}
+              key={`second-${index}`}
               className="logo-item cursor-pointer transition-all duration-300 flex-shrink-0 relative"
             >
               <div className="logo-circle w-24 h-24 rounded-full border-2 border-gray-200 overflow-hidden flex items-center justify-center bg-white shadow-lg transition-all duration-300">

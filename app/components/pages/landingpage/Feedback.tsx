@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 import { gsap } from "gsap";
@@ -16,8 +16,6 @@ interface Testimonial {
   name: string;
   position: string;
 }
-
-interface RefElement extends HTMLElement {}
 
 const FeedbackSection: React.FC = () => {
   const [activeSlide, setActiveSlide] = useState<number>(0);
@@ -59,6 +57,86 @@ const FeedbackSection: React.FC = () => {
       position: "CEO",
     },
   ];
+
+  // Function to animate slide transitions - OPTIMIZED and memoized
+  const animateSlide = useCallback(
+    (newIndex: number, oldIndex: number): void => {
+      if (!animationsComplete) return;
+
+      const tl = gsap.timeline();
+
+      // Animate out current slide - FASTER
+      if (imageRefs.current[oldIndex]) {
+        tl.to(
+          imageRefs.current[oldIndex],
+          {
+            opacity: 0,
+            scale: 0.8,
+            y: -50,
+            duration: 0.3, // Reduced from 0.4
+            ease: "power2.in",
+          },
+          0
+        );
+      }
+
+      if (testimonialRefs.current[oldIndex]) {
+        tl.to(
+          testimonialRefs.current[oldIndex],
+          {
+            opacity: 0,
+            x: -100,
+            duration: 0.3, // Reduced from 0.4
+            ease: "back.in",
+          },
+          0
+        );
+      }
+
+      // Animate in new slide - FASTER
+      if (imageRefs.current[newIndex]) {
+        tl.fromTo(
+          imageRefs.current[newIndex],
+          { opacity: 0, scale: 0.8, y: 50 },
+          {
+            opacity: 1,
+            scale: 1.1,
+            y: 0,
+            duration: 0.5, // Reduced from 0.6
+            ease: "back.out(1.7)",
+            onComplete: () => {
+              // Floating animation
+              if (imageRefs.current[newIndex]) {
+                gsap.to(imageRefs.current[newIndex], {
+                  y: -10,
+                  repeat: -1,
+                  yoyo: true,
+                  duration: 2,
+                  ease: "sine.inOut",
+                });
+              }
+            },
+          },
+          0.2 // Reduced from 0.3
+        );
+      }
+
+      if (testimonialRefs.current[newIndex]) {
+        tl.fromTo(
+          testimonialRefs.current[newIndex],
+          { opacity: 0, x: 100 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.5, // Reduced from 0.6
+            ease: "power2.out",
+          },
+          0.25 // Reduced from 0.4
+        );
+      }
+    },
+    [animationsComplete]
+  );
 
   // GSAP animations using useGSAP hook
   useGSAP(
@@ -199,83 +277,6 @@ const FeedbackSection: React.FC = () => {
     { scope: containerRef }
   );
 
-  // Function to animate slide transitions - OPTIMIZED
-  const animateSlide = (newIndex: number, oldIndex: number): void => {
-    if (!animationsComplete) return;
-
-    const tl = gsap.timeline();
-
-    // Animate out current slide - FASTER
-    if (imageRefs.current[oldIndex]) {
-      tl.to(
-        imageRefs.current[oldIndex],
-        {
-          opacity: 0,
-          scale: 0.8,
-          y: -50,
-          duration: 0.3, // Reduced from 0.4
-          ease: "power2.in",
-        },
-        0
-      );
-    }
-
-    if (testimonialRefs.current[oldIndex]) {
-      tl.to(
-        testimonialRefs.current[oldIndex],
-        {
-          opacity: 0,
-          x: -100,
-          duration: 0.3, // Reduced from 0.4
-          ease: "back.in",
-        },
-        0
-      );
-    }
-
-    // Animate in new slide - FASTER
-    if (imageRefs.current[newIndex]) {
-      tl.fromTo(
-        imageRefs.current[newIndex],
-        { opacity: 0, scale: 0.8, y: 50 },
-        {
-          opacity: 1,
-          scale: 1.1,
-          y: 0,
-          duration: 0.5, // Reduced from 0.6
-          ease: "back.out(1.7)",
-          onComplete: () => {
-            // Floating animation
-            if (imageRefs.current[newIndex]) {
-              gsap.to(imageRefs.current[newIndex], {
-                y: -10,
-                repeat: -1,
-                yoyo: true,
-                duration: 2,
-                ease: "sine.inOut",
-              });
-            }
-          },
-        },
-        0.2 // Reduced from 0.3
-      );
-    }
-
-    if (testimonialRefs.current[newIndex]) {
-      tl.fromTo(
-        testimonialRefs.current[newIndex],
-        { opacity: 0, x: 100 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.5, // Reduced from 0.6
-          ease: "power2.out",
-        },
-        0.25 // Reduced from 0.4
-      );
-    }
-  };
-
   // Auto-slide functionality
   useEffect(() => {
     if (!animationsComplete) return;
@@ -289,7 +290,7 @@ const FeedbackSection: React.FC = () => {
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [testimonials.length, animationsComplete]);
+  }, [testimonials.length, animationsComplete, animateSlide]);
 
   const goToSlide = (index: number): void => {
     if (!animationsComplete || index === activeSlide) return;
@@ -409,10 +410,12 @@ const FeedbackSection: React.FC = () => {
                       </span>
 
                       <div className="absolute -bottom-3 -right-4 w-24 h-24">
-                        <img
+                        <Image
                           src="https://res.cloudinary.com/dmz8tsndt/image/upload/v1757024729/testimonial-4-shape_r6j9wh.png"
                           alt="feedback decoration"
                           className="w-full h-full object-contain"
+                          width={96}
+                          height={96}
                         />
                       </div>
                     </div>
@@ -561,10 +564,12 @@ const FeedbackSection: React.FC = () => {
                       </span>
 
                       <div className="absolute -bottom-3 -right-4 w-24 h-24">
-                        <img
+                        <Image
                           src="https://res.cloudinary.com/dmz8tsndt/image/upload/v1757024729/testimonial-4-shape_r6j9wh.png"
                           alt="feedback decoration"
                           className="w-full h-full object-contain"
+                          width={96}
+                          height={96}
                         />
                       </div>
                     </div>
