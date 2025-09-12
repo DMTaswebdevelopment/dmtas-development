@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@layer base {
+  @font-face {
+    font-family: "brigoli-extrabold";
+    src: url("/fonts/BricolageGrotesque-ExtraBold.woff2") format("woff2");
+    font-weight: 800; /* Adjust based on the actual font weight */
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "montserrat-regular";
+    src: url("/fonts/Montserrat-Regular.ttf") format("truetype");
+    font-weight: 400; /* Regular weight */
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "montserrat-bold";
+    src: url("/fonts/Montserrat-Bold.ttf") format("truetype");
+    font-weight: 700; /* Regular weight */
+    font-style: normal;
+  }
+}
