@@ -7,7 +7,7 @@ import { useGSAP } from "@gsap/react";
 const HeroSection = () => {
   // Fix: Change to gsap.core.Timeline type instead of HTMLDivElement
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
   // Animation refs
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -162,9 +162,9 @@ const HeroSection = () => {
             className="text-base md:text-lg leading-relaxed font-sans text-gray-50 max-w-2xl mx-auto mb-8 opacity-0"
           >
             Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book.
+            industry. Lorem Ipsum has been the industry&apos;s standard dummy
+            text ever since the 1500s, when an unknown printer took a galley of
+            type and scrambled it to make a type specimen book.
           </p>
 
           {/* <div ref={buttonRef} className="opacity-0">
