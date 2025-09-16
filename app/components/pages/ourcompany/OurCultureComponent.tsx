@@ -106,13 +106,13 @@ const OurCultureComponent: React.FC = () => {
             </div>
 
             <p className="text-xl md:text-2xl text-gray-600 max-w-7xl mx-auto leading-relaxed font-sans">
-              Culture isn't something written on a wall - it's the way we work,
-              treat people, and hold ourselves accountable every single day. Our
-              roots are Tasmanian, and that matters. It means we understand the
-              challenges local businesses face, and we share the same drive to
-              see our community thrive. We're proud to stand beside Tasmanian
-              organisations, not only as a supplier, but as a long-term partner
-              invested in their success.
+              Culture isn&rsquo;t something written on a wall - it&rsquo;s the
+              way we work, treat people, and hold ourselves accountable every
+              single day. Our roots are Tasmanian, and that matters. It means we
+              understand the challenges local businesses face, and we share the
+              same drive to see our community thrive. We&rsquo;re proud to stand
+              beside Tasmanian organisations, not only as a supplier, but as a
+              long-term partner invested in their success.
             </p>
           </div>
         </div>
