@@ -5,15 +5,24 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 
-// Type definitions - Fixed interface declaration
+// Type definitions
 type ClientLogo = {
   id: number;
   name: string;
   logo: string;
 };
 
+// Custom debounce function
+const debounce = (func: () => void, wait: number) => {
+  let timeout: NodeJS.Timeout;
+  return () => {
+    clearTimeout(timeout);
+    timeout = setTimeout(func, wait);
+  };
+};
+
 const CustomerLogosSection: React.FC = () => {
-  // Sample client logos data with proper typing
+  // Sample client logos data
   const clientLogos: ClientLogo[] = [
     {
       id: 1,
@@ -52,210 +61,160 @@ const CustomerLogosSection: React.FC = () => {
     },
   ];
 
-  // Refs with proper typing
-  const logoScrollRef = useRef<HTMLDivElement>(null);
-  const logoRefs = useRef<(HTMLDivElement | null)[]>([]);
+  // Refs
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const animationRef = useRef<gsap.core.Tween | null>(null);
+
+  // Create enough duplicates to ensure smooth infinite scroll
+  const duplicatedLogos = [
+    ...clientLogos,
+    ...clientLogos,
+    ...clientLogos, // Triple the logos for seamless looping
+  ];
 
   useGSAP(
     () => {
-      if (!logoScrollRef.current) return;
+      if (!scrollerRef.current || !containerRef.current) return;
 
-      // Wait for images to load and get accurate measurements
-      const initAnimation = (): void => {
-        const container = logoScrollRef.current;
-        if (!container) return;
+      const scroller = scrollerRef.current;
+      const container = containerRef.current;
 
-        // Reset any existing transform
-        gsap.set(container, { x: 0 });
-
-        // Get the first logo element to calculate dimensions
-        const firstLogo = container.querySelector(".logo-item") as HTMLElement;
-        if (!firstLogo) return;
-
-        // Calculate dimensions with more precision
-        const logoWidth: number = firstLogo.getBoundingClientRect().width;
-        const computedStyle = window.getComputedStyle(container);
-        const gap: number = parseInt(computedStyle.gap) || 32;
-
-        // Calculate the width of one complete set
-        const oneSetWidth: number = (logoWidth + gap) * clientLogos.length;
-
-        // Ensure container has proper width
-        container.style.width = `${oneSetWidth * 2}px`;
-
-        // Kill any existing animation
+      // Function to initialize the animation
+      const initAnimation = () => {
+        // Kill existing animation
         if (animationRef.current) {
           animationRef.current.kill();
         }
 
-        // Create the infinite scroll animation
-        animationRef.current = gsap.to(container, {
-          x: -oneSetWidth,
-          duration: 20, // Slower for smoother animation
-          ease: "none",
-          repeat: -1,
-          repeatDelay: 0,
-          // Force hardware acceleration
-          force3D: true,
-          // Ensure smooth looping
-          modifiers: {
-            x: gsap.utils.unitize((x: string) => parseFloat(x) % oneSetWidth),
-          },
+        // Reset position
+        gsap.set(scroller, { x: 0 });
+
+        // Wait for next frame to ensure DOM is ready
+        gsap.delayedCall(0.1, () => {
+          // Get the width of one set of logos (original set)
+          const logoItems = scroller.querySelectorAll(".logo-item");
+          const originalSetSize = clientLogos.length;
+
+          if (logoItems.length === 0) return;
+
+          // Calculate the width of one complete set
+          let oneSetWidth = 0;
+          for (let i = 0; i < originalSetSize; i++) {
+            const item = logoItems[i] as HTMLElement;
+            const rect = item.getBoundingClientRect();
+            oneSetWidth += rect.width + 32; // 32px is gap (gap-8 = 2rem = 32px)
+          }
+
+          // Create the infinite scroll animation
+          animationRef.current = gsap.to(scroller, {
+            x: -oneSetWidth,
+            duration: 25, // Slower for smoother animation
+            ease: "none",
+            repeat: -1,
+            repeatDelay: 0,
+            force3D: true,
+            // Use modifiers for perfect looping
+            modifiers: {
+              x: (x: string) => {
+                const numValue = parseFloat(x);
+                return `${numValue % oneSetWidth}px`;
+              },
+            },
+          });
         });
       };
 
-      // Initialize after a short delay to ensure DOM is ready
-      const timer: NodeJS.Timeout = setTimeout(initAnimation, 100);
+      // Initialize animation after images load
+      const images = scroller.querySelectorAll("img");
+      let loadedImages = 0;
+      const totalImages = images.length;
 
-      // Also initialize on window resize
-      const handleResize = (): void => {
-        clearTimeout(timer);
-        setTimeout(initAnimation, 100);
+      if (totalImages === 0) {
+        initAnimation();
+        return;
+      }
+
+      const checkAllImagesLoaded = () => {
+        loadedImages++;
+        if (loadedImages >= totalImages) {
+          initAnimation();
+        }
       };
+
+      images.forEach((img) => {
+        if (img.complete) {
+          checkAllImagesLoaded();
+        } else {
+          img.addEventListener("load", checkAllImagesLoaded);
+          img.addEventListener("error", checkAllImagesLoaded);
+        }
+      });
+
+      // Handle window resize with custom debounce
+      const handleResize = debounce(() => {
+        initAnimation();
+      }, 250);
 
       window.addEventListener("resize", handleResize);
 
-      // Center detection and color animation
-      const containerCenter: number = window.innerWidth / 2;
-
-      const checkCenterLogo = (): void => {
-        if (!logoScrollRef.current) return;
-
-        const logos = logoScrollRef.current.querySelectorAll(".logo-item");
-
-        logos.forEach((logo: Element) => {
-          const logoElement = logo as HTMLElement;
-          const logoRect: DOMRect = logoElement.getBoundingClientRect();
-          const logoCenter: number = logoRect.left + logoRect.width / 2;
-          const distanceFromCenter: number = Math.abs(
-            logoCenter - containerCenter
-          );
-          const image = logo.querySelector("img") as HTMLImageElement;
-          const circle = logo.querySelector(".logo-circle") as HTMLElement;
-
-          if (distanceFromCenter < 100) {
-            // Logo is in center
-            gsap.to(image, {
-              filter: "grayscale(0%) brightness(1.1)",
-              duration: 0.4,
-              ease: "power2.out",
-            });
-
-            gsap.to(circle, {
-              scale: 1.1,
-              boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-              duration: 0.4,
-              ease: "power2.out",
-            });
-          } else {
-            // Apply grayscale and reset scale
-            gsap.to(image, {
-              filter: "grayscale(100%)",
-              duration: 0.4,
-              ease: "power2.out",
-            });
-
-            gsap.to(circle, {
-              scale: 1,
-              boxShadow: "0 4px 10px rgba(0,0,0,0.1)",
-              duration: 0.4,
-              ease: "power2.out",
-            });
-          }
-        });
-      };
-
-      // Use requestAnimationFrame for smoother center detection
-      let rafId: number;
-      const animateCenter = (): void => {
-        checkCenterLogo();
-        rafId = requestAnimationFrame(animateCenter);
-      };
-
-      rafId = requestAnimationFrame(animateCenter);
-
-      // Cleanup function
+      // Cleanup
       return () => {
-        clearTimeout(timer);
-        window.removeEventListener("resize", handleResize);
         if (animationRef.current) {
           animationRef.current.kill();
         }
-        if (rafId) {
-          cancelAnimationFrame(rafId);
-        }
+        window.removeEventListener("resize", handleResize);
+        images.forEach((img) => {
+          img.removeEventListener("load", checkAllImagesLoaded);
+          img.removeEventListener("error", checkAllImagesLoaded);
+        });
       };
     },
-    { scope: logoScrollRef, dependencies: [clientLogos] }
+    { scope: containerRef }
   );
 
-  // Hover effects
+  // Hover effects - Show full color only on hover
   useGSAP(
     () => {
-      const logos = logoScrollRef.current?.querySelectorAll(".logo-item");
+      const logoItems = containerRef.current?.querySelectorAll(".logo-item");
 
-      logos?.forEach((logo: Element) => {
-        const logoElement = logo as HTMLElement;
-        const circle = logo.querySelector(".logo-circle") as HTMLElement;
-        const image = logo.querySelector("img") as HTMLImageElement;
+      logoItems?.forEach((item) => {
+        const logoElement = item as HTMLElement;
+        const image = logoElement.querySelector("img") as HTMLImageElement;
 
-        const handleMouseEnter = (): void => {
-          gsap.to(circle, {
-            scale: 1.15,
+        if (!image) return;
+
+        // Set initial grayscale state
+        gsap.set(image, {
+          filter: "grayscale(100%)",
+          scale: 1,
+        });
+
+        const handleMouseEnter = () => {
+          gsap.to(image, {
+            scale: 1.3,
+            filter: "grayscale(0%) brightness(1.2)",
             duration: 0.3,
+            rotate: 10,
             ease: "back.out(1.7)",
           });
+        };
 
+        const handleMouseLeave = () => {
           gsap.to(image, {
-            filter: "grayscale(0%) brightness(1.2)",
+            scale: 1,
+            rotate: 0,
+            filter: "grayscale(100%) brightness(1)",
             duration: 0.3,
             ease: "power2.out",
           });
         };
 
-        const handleMouseLeave = (): void => {
-          // Check if not in center before resetting
-          const logoRect: DOMRect = logoElement.getBoundingClientRect();
-          const logoCenter: number = logoRect.left + logoRect.width / 2;
-          const containerCenter: number = window.innerWidth / 2;
-          const distanceFromCenter: number = Math.abs(
-            logoCenter - containerCenter
-          );
-
-          if (distanceFromCenter >= 100) {
-            gsap.to(circle, {
-              scale: 1,
-              duration: 0.3,
-              ease: "power2.out",
-            });
-
-            gsap.to(image, {
-              filter: "grayscale(100%)",
-              duration: 0.3,
-              ease: "power2.out",
-            });
-          } else {
-            // If in center, maintain the center state
-            gsap.to(circle, {
-              scale: 1.1,
-              duration: 0.3,
-              ease: "power2.out",
-            });
-          }
-        };
-
         logoElement.addEventListener("mouseenter", handleMouseEnter);
         logoElement.addEventListener("mouseleave", handleMouseLeave);
-
-        // Cleanup event listeners
-        return () => {
-          logoElement.removeEventListener("mouseenter", handleMouseEnter);
-          logoElement.removeEventListener("mouseleave", handleMouseLeave);
-        };
       });
     },
-    { scope: logoScrollRef, dependencies: [clientLogos] }
+    { scope: containerRef }
   );
 
   return (
@@ -277,60 +236,40 @@ const CustomerLogosSection: React.FC = () => {
       </div>
 
       {/* Logo Scroll Container */}
-      <div className="overflow-hidden relative mx-auto max-w-7xl w-full py-8">
+      <div
+        ref={containerRef}
+        className="overflow-hidden relative mx-auto max-w-7xl w-full py-8"
+      >
         <div
-          ref={logoScrollRef}
+          ref={scrollerRef}
           className="flex gap-8 items-center"
           style={{
             willChange: "transform",
           }}
         >
-          {/* First set of logos */}
-          {clientLogos.map((client: ClientLogo, index: number) => (
+          {duplicatedLogos.map((client, index) => (
             <div
-              key={`first-${client.id}`}
-              ref={(el: HTMLDivElement | null) => {
-                logoRefs.current[index] = el;
-              }}
-              className="logo-item cursor-pointer transition-all duration-300 flex-shrink-0 relative"
+              key={`${client.id}-${index}`}
+              className="logo-item flex-shrink-0 relative"
             >
-              <div className="logo-circle w-24 h-24 rounded-full border-2 border-gray-200 overflow-hidden flex items-center justify-center bg-white shadow-lg transition-all duration-300">
+              <div className="w-24 h-16 flex items-center justify-center">
                 <Image
                   src={client.logo}
                   alt={`${client.name} logo`}
-                  width={80}
-                  height={40}
-                  className="object-contain filter grayscale transition-all duration-500"
+                  width={96}
+                  height={64}
+                  className="object-contain max-w-full max-h-full transition-all duration-300"
                   loading="eager"
-                  priority={index < 3}
-                />
-              </div>
-            </div>
-          ))}
-
-          {/* Duplicate set for seamless loop */}
-          {clientLogos.map((client: ClientLogo, index: number) => (
-            <div
-              key={`second-${index}`}
-              className="logo-item cursor-pointer transition-all duration-300 flex-shrink-0 relative"
-            >
-              <div className="logo-circle w-24 h-24 rounded-full border-2 border-gray-200 overflow-hidden flex items-center justify-center bg-white shadow-lg transition-all duration-300">
-                <Image
-                  src={client.logo}
-                  alt={`${client.name} logo`}
-                  width={80}
-                  height={40}
-                  className="object-contain filter grayscale transition-all duration-500"
-                  loading="eager"
+                  priority={index < clientLogos.length}
                 />
               </div>
             </div>
           ))}
         </div>
 
-        {/* Optional fade edges for better visual effect */}
-        <div className="absolute left-0 top-0 w-20 h-full bg-gradient-to-r from-black/10 to-transparent pointer-events-none z-10"></div>
-        <div className="absolute right-0 top-0 w-20 h-full bg-gradient-to-l from-black/10 to-transparent pointer-events-none z-10"></div>
+        {/* Gradient fade edges */}
+        <div className="absolute left-0 top-0 w-24 h-full bg-gradient-to-r from-black/20 to-transparent pointer-events-none z-10"></div>
+        <div className="absolute right-0 top-0 w-24 h-full bg-gradient-to-l from-black/20 to-transparent pointer-events-none z-10"></div>
       </div>
     </div>
   );

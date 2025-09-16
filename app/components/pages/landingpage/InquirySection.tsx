@@ -62,7 +62,7 @@ const InquirySection: React.FC = () => {
         <div className="w-full lg:w-1/2 bg-gradient-to-l from-gray-50 to-white p-4 sm:p-8 lg:p-16 flex flex-col justify-center min-h-[50vh] lg:min-h-screen">
           <div className="w-full max-w-xl lg:ml-5">
             <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-2 font-monserrat_bold">
-              Let&apos;`s Get in Touch
+              Let&apos;s Get in Touch
             </h2>
             <p className="text-gray-800 mb-6 sm:mb-8 font-sans">
               Your email address will not be published.
@@ -73,7 +73,7 @@ const InquirySection: React.FC = () => {
               <div className="flex flex-col">
                 <label className="text-black font-bold mb-2 flex items-center gap-2">
                   <Building2 className="w-4 h-4" />
-                  <span>Select Brand/Division</span>
+                  <span>Select Brand</span>
                 </label>
                 <div className="relative">
                   <button
@@ -162,9 +162,9 @@ const InquirySection: React.FC = () => {
               <div className="flex flex-col">
                 <label className="text-black font-bold mb-2">Message</label>
                 <textarea
-                  rows={4}
+                  rows={5}
                   className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors resize-none"
-                  placeholder="Tell us about your project..."
+                  placeholder="Tell us about your project/ general enquiry..."
                 />
               </div>
             </div>

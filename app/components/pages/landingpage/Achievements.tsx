@@ -59,10 +59,10 @@ const Achievements = () => {
         opacity: 1,
         scale: 1,
         rotation: 0,
-        duration: 0.8,
+        duration: 0.2,
         ease: "elastic.out(1, 0.8)",
         stagger: {
-          amount: 0.8,
+          amount: 0.2,
           from: "start",
           grid: "auto",
         },

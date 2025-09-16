@@ -6,6 +6,7 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 import { SplitText, ScrollTrigger } from "gsap/all";
 import DMTasLogoWhite from "@/public/dmtas_assets/DMTas_Logomark_Colour.svg";
+import ButtonComponent from "../../template/ButtonComponent/ButtonComponent";
 
 // Type definition for card list items
 interface CardListItem {
@@ -90,8 +91,8 @@ const HomeServices: React.FC = () => {
         <div className="w-full">
           <div className="flex flex-col justify-center items-center mb-16">
             <div className="inline-block mb-6">
-              <div className="flex items-center  justify-center  px-4 py-2 gap-5">
-                <div className="w-8 h-8">
+              <div className="flex flex-col items-center  justify-center  px-4 py-2 gap-5">
+                <div className="w-24 h-20">
                   <Image
                     src={DMTasLogoWhite}
                     height={200}
@@ -118,7 +119,7 @@ const HomeServices: React.FC = () => {
                 (cardlist: CardListItem, index: number) => (
                   <div
                     key={index}
-                    className={`card-item h-[30rem] relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group cursor-pointer border border-gray-100 
+                    className={`card-item h-[30rem] relative bg-white p-8 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 group  border border-gray-100 
                     hover:border-transparent
                     before:absolute before:inset-0 before:rounded-2xl before:p-[2px] 
                     before:bg-gradient-to-r before:from-blue-400 before:via-purple-400 before:to-pink-400
@@ -132,18 +133,14 @@ const HomeServices: React.FC = () => {
                     }}
                   >
                     {/* Icon */}
-                    <div className="mb-6 flex justify-between relative z-10">
-                      <div className="flex justify-start items-center h-64 w-72 relative">
+                    <div className="mb-6 flex justify-center relative z-10">
+                      <div className="flex justify-center items-center h-64 w-72 relative">
                         <Image
                           src={cardlist.img_url}
                           alt={cardlist.alt}
                           fill
                           className="object-contain"
                         />
-                      </div>
-                      {/* Large background number */}
-                      <div className="absolute right-6 text-8xl font-bold text-gray-100 opacity-50 select-none">
-                        0{cardlist.id}
                       </div>
                     </div>
 
@@ -155,15 +152,15 @@ const HomeServices: React.FC = () => {
                     </div>
 
                     {/* Read More Button */}
-                    <button
+                    <ButtonComponent
                       type="button"
-                      className={`flex items-center text-base font-bold font-sans gap-2 ${cardlist.bg} py-3 px-5 w-1/2 whitespace-nowrap justify-between rounded-xl text-black font-semibold group/btn relative z-10`}
+                      className={`flex cursor-pointer items-center text-base font-bold font-sans gap-2 ${cardlist.bg} py-3 px-5 w-1/2 whitespace-nowrap justify-between rounded-xl text-black font-semibold group/btn relative z-10`}
                     >
                       <span>{cardlist.button_text}</span>
                       <div className="2xl:w-8 2xl:h-8 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center ">
-                        <Play className="2xl:w-4 2xl:h-4 h-2 w-2 fill-current group-hover/btn:text-white" />
+                        <Play className="2xl:w-4 2xl:h-4 h-2 w-2 fill-current group-hover/btn:text-black" />
                       </div>
-                    </button>
+                    </ButtonComponent>
                   </div>
                 )
               )}

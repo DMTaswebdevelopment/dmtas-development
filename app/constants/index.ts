@@ -5,7 +5,16 @@ import Digital_Print_Panel from "@/public/home_page/Digital_Print_Panel_v3.png";
 import Signage_Panel from "@/public/home_page/Signage_Panel_v3.png";
 import Embedded_Partnerships_Panel from "@/public/home_page/Embedded_Partnerships_Panel_v3.png";
 import Just_Say_Cheese_Print_Panel from "@/public/home_page/Just_Say_Cheese_Print_Panel.png";
-import { BookOpenText, Globe, Printer, LucideIcon } from "lucide-react";
+import {
+  BookOpenText,
+  Globe,
+  Printer,
+  LucideIcon,
+  Facebook,
+  Instagram,
+  Linkedin,
+  Youtube,
+} from "lucide-react";
 import { StaticImageData } from "next/image";
 import { ProductsMenuItem } from "../model/interface/ProductionsMenuItemType";
 
@@ -230,7 +239,136 @@ const missionLists: MissionListItem[] = [
   },
 ];
 
-export { data, productsMenu, cardLists, missionLists };
+const socialLinks = [
+  {
+    icon: Facebook,
+    link: "https://www.facebook.com/DMTas.2021",
+    label: "Facebook",
+  },
+  {
+    icon: Instagram,
+    link: "https://www.instagram.com/dmtas.2021/",
+    label: "Instagram",
+  },
+  {
+    icon: Linkedin,
+    link: "https://www.linkedin.com/company/document-management-tasmania/",
+    label: "LinkedIn",
+  },
+  {
+    icon: Youtube,
+    link: "https://www.youtube.com/channel/UCe9YGPz1bQerzhmw_kbhjBw",
+    label: "YouTube",
+  },
+];
+
+const footerLinks = [
+  {
+    title: "Our Brands",
+    subTitle: [
+      {
+        name: "The Print Division",
+        links: "/services/multifunctionPrinters/about#top",
+      },
+      {
+        name: "Acrodata",
+        links: "/services/digitalPrint/about#top",
+      },
+      {
+        name: "Hobart Signwriters",
+        links: "/services/digitisation/about#top",
+      },
+    ],
+  },
+  {
+    title: "Our Company",
+    subTitle: [
+      {
+        name: "About Us",
+        links: "/support/serviceRequest",
+      },
+      {
+        name: "Our Culture",
+        links: "/support/meterRead",
+      },
+      // {
+      //   name: "Remote Support",
+      //   links: "/support/remoteSupport",
+      // },
+      // {
+      //   name: "Driver and Support",
+      //   links:
+      //     "https://support-fb.fujifilm.com/setupSupport.do?cid=2&ctry_code=AU&lang_code=en",
+      // },
+    ],
+  },
+  {
+    title: "Hardware Support",
+    subTitle: [
+      {
+        name: "Service Request",
+        links: "/support/serviceRequest",
+      },
+      {
+        name: "Meter Read",
+        links: "/support/meterRead",
+      },
+      {
+        name: "Remote Support",
+        links: "/support/remoteSupport",
+      },
+      {
+        name: "Driver and Support",
+        links:
+          "https://support-fb.fujifilm.com/setupSupport.do?cid=2&ctry_code=AU&lang_code=en",
+      },
+    ],
+  },
+  {
+    title: "Contacts",
+    subTitle: [
+      {
+        name: "1300 141 100",
+        links: "tel:1300141100",
+      },
+      {
+        name: "enquiries@dmtas.com.au",
+        links: "mailto:enquiries@dmtas.com.au",
+      },
+      {
+        name: "16 Ruthwell Street, Montrose TAS 7010",
+        links:
+          "https://www.google.com/maps?q=16+Ruthwell+Street,+Montrose+TAS+7010",
+      },
+    ],
+  },
+  {
+    title: "Legal",
+    subTitle: [
+      {
+        name: "Privacy Policy",
+        links: "/support/privacyPolicy",
+      },
+      {
+        name: "Terms of Service",
+        links: "/support/termsOfService",
+      },
+      {
+        name: "ABN: 52 629 796 103",
+        links: null,
+      },
+    ],
+  },
+];
+
+export {
+  data,
+  productsMenu,
+  cardLists,
+  missionLists,
+  socialLinks,
+  footerLinks,
+};
 
 // Export types for use in other components
 export type { DataItem, ProductsMenuItem, CardListItem, MissionListItem };

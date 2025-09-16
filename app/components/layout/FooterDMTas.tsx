@@ -18,6 +18,7 @@ import {
 import iso9001 from "@/public/ISO9001_Logo.svg";
 import iso27001 from "@/public/ISO27001_Logo.svg";
 import useWidthHook from "@/app/hooks/useWidthHooks";
+import { footerLinks, socialLinks } from "@/app/constants";
 
 const FooterDMTas = () => {
   const width = useWidthHook();
@@ -29,106 +30,6 @@ const FooterDMTas = () => {
       [index]: !prev[index],
     }));
   };
-
-  const socialLinks = [
-    {
-      icon: Facebook,
-      link: "https://www.facebook.com/DMTas.2021",
-      label: "Facebook",
-    },
-    {
-      icon: Instagram,
-      link: "https://www.instagram.com/dmtas.2021/",
-      label: "Instagram",
-    },
-    {
-      icon: Linkedin,
-      link: "https://www.linkedin.com/company/document-management-tasmania/",
-      label: "LinkedIn",
-    },
-    {
-      icon: Youtube,
-      link: "https://www.youtube.com/channel/UCe9YGPz1bQerzhmw_kbhjBw",
-      label: "YouTube",
-    },
-  ];
-
-  const footerLinks = [
-    {
-      title: "Our Brands",
-      subTitle: [
-        {
-          name: "The Print Division Tasmania",
-          links: "/services/multifunctionPrinters/about#top",
-        },
-        {
-          name: "Acrodata",
-          links: "/services/digitalPrint/about#top",
-        },
-        {
-          name: "Hobart Signwriters",
-          links: "/services/digitisation/about#top",
-        },
-      ],
-    },
-    {
-      title: "Hardware Support",
-      subTitle: [
-        {
-          name: "Service Request",
-          links: "/support/serviceRequest",
-        },
-        {
-          name: "Meter Read",
-          links: "/support/meterRead",
-        },
-        {
-          name: "Remote Support",
-          links: "/support/remoteSupport",
-        },
-        {
-          name: "Driver and Support",
-          links:
-            "https://support-fb.fujifilm.com/setupSupport.do?cid=2&ctry_code=AU&lang_code=en",
-        },
-      ],
-    },
-    {
-      title: "Contacts",
-      subTitle: [
-        {
-          name: "1300 141 100",
-          links: "tel:1300141100",
-        },
-        {
-          name: "enquiries@dmtas.com.au",
-          links: "mailto:enquiries@dmtas.com.au",
-        },
-        {
-          name: "16 Ruthwell Street, Montrose TAS 7010",
-          links:
-            "https://www.google.com/maps?q=16+Ruthwell+Street,+Montrose+TAS+7010",
-        },
-      ],
-    },
-    {
-      title: "Legal",
-      subTitle: [
-        {
-          name: "Privacy Policy",
-          links: "/support/privacyPolicy",
-        },
-        {
-          name: "Terms of Service",
-          links: "/support/termsOfService",
-        },
-        {
-          name: "ABN: 52 629 796 103",
-          links: null,
-        },
-      ],
-    },
-  ];
 
   const DesktopFooter = () => (
     <footer className="bg-black py-8 w-full relative">
@@ -244,10 +145,10 @@ const FooterDMTas = () => {
       <hr className="my-6 border-gray-600 w-full" />
 
       {/* Copyright */}
-      <div className="px-16 xl:px-[200px]">
+      <div className="px-7 gap-5 2xl:px-28">
         <p className="text-gray-400 text-xs font-monserrat">
           <a href="/login" className="hover:text-white transition-colors">
-            @
+            ©
           </a>{" "}
           2025 Document Management Tasmania Inc. All rights reserved.
         </p>
@@ -401,7 +302,7 @@ const FooterDMTas = () => {
       <div className="mt-[60px] mb-[40px] text-center">
         <p className="text-gray-400 text-xs font-monserrat">
           <a href="/login" className="hover:text-white transition-colors">
-            @
+            ©
           </a>{" "}
           2025 Document Management Tasmania Inc. All rights reserved.
         </p>

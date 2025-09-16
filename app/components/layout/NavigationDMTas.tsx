@@ -344,7 +344,7 @@ const NavigationDMTas: React.FC = () => {
                 >
                   <div className="relative">
                     <span className="cursor-pointer hover:opacity-80 ">
-                      Product
+                      Products
                     </span>
 
                     <UnderAnimationComponent isHover={isProductHover} />
@@ -484,7 +484,7 @@ const NavigationDMTas: React.FC = () => {
                 <ButtonComponent
                   className={`group relative ${
                     isFixed ? "text-white" : "text-[#252324]"
-                  } font-semibold text-sm border p-2 px-1 md:px-2.5 rounded-xl hover:bg-red-600 hover:text-white transition duration-300 ease-out lg:px-5 2xl:px-8 border-red-600 tracking-normal lg:text-base xl:text-lg font-sans flex items-center justify-center gap-1`}
+                  } font-semibold text-sm border p-2 px-1 md:px-2.5 cursor-pointer rounded-xl hover:bg-red-600 hover:text-white transition duration-300 ease-out lg:px-5 2xl:px-8 border-red-600 tracking-normal lg:text-base xl:text-lg font-sans flex items-center justify-center gap-1`}
                   onClick={handleClick}
                 >
                   <PuzzleIcon
@@ -497,8 +497,20 @@ const NavigationDMTas: React.FC = () => {
                   <span> Puzzles</span>
                 </ButtonComponent>
               </div>
+
               <ButtonComponent
-                className={`bg-[#007EC6] text-white font-bold p-2 px-1 md:px-2.5 rounded-xl lg:px-5 2xl:px-8 tracking-wide text-sm lg:text-base hover:opacity-80 transition ease-in-out duration-300 font-sans flex items-center justify-center whitespace-nowrap`}
+                className={`
+                 bg-[#007EC6] text-white cursor-pointer font-bold p-2 px-1 md:px-2.5 rounded-xl lg:px-5 2xl:px-8 
+                 tracking-wide text-sm lg:text-base font-sans flex items-center justify-center whitespace-nowrap
+                 relative overflow-hidden
+                 transition-all ease-in-out duration-300
+                 hover:bg-[#0056b3] hover:scale-105 hover:shadow-lg hover:shadow-[#007EC6]/30
+                 hover:-translate-y-1 hover:brightness-110
+                 active:scale-95 active:translate-y-0
+                 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
+                 before:translate-x-[-100%] before:transition-transform before:duration-700
+                 hover:before:translate-x-[100%]
+                `}
                 onClick={handleClick}
               >
                 Hardware Support
