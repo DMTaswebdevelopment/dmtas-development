@@ -6,13 +6,7 @@ import Link from "next/link.js";
 import { AnimatePresence, motion } from "framer-motion";
 
 //icons - Fixed import
-import {
-  ChevronRight,
-  Facebook,
-  Instagram,
-  Linkedin,
-  Youtube,
-} from "lucide-react";
+import { ChevronRight } from "lucide-react";
 
 //ISO
 import iso9001 from "@/public/ISO9001_Logo.svg";

@@ -270,8 +270,8 @@ const OurCultureComponent: React.FC = () => {
                   partner.
                 </p>
                 <p className="text-lg text-blue-100 font-sans">
-                  Not just keeping up with change but leading it. That's the
-                  culture that sets DMTas apart.
+                  Not just keeping up with change but leading it. That&rsquo;s
+                  the culture that sets DMTas apart.
                 </p>
               </div>
             </div>
