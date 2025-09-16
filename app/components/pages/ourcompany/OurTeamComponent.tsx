@@ -109,8 +109,9 @@ const OurTeamComponent: React.FC = () => {
 
           <h2 className="text-4xl md:text-5xl font-monserrat_bold font-bold text-black mb-6"></h2>
           <p className="text-base font-sans text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            We're a dynamic group of individuals who are passionate about what
-            we do and dedicated to delivering the best results for our clients.
+            We&apos;re a dynamic group of individuals who are passionate about
+            what we do and dedicated to delivering the best results for our
+            clients.
           </p>
         </div>
 

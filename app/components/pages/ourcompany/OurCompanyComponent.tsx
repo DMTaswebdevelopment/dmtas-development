@@ -103,14 +103,15 @@ const OurCompanyComponent: React.FC = () => {
               className="flex flex-col space-y-3 font-sans text-base text-gray-500 w-full"
             >
               <p>
-                Document Management Tasmania (DMTas), previously known as "The
-                Fuji Xerox Business Centre," has been in business for over 40
-                years. We're recognised as Tasmania's trusted company for
-                multi-function printers, prints, digitisation, and signage.
-                DMTas built its legacy by supplying and servicing Fujifilm's
-                printers, establishing us as the largest provider of
-                multi-function printers in Tasmania—a feat we are proud of, and
-                we stand by our products and quality service.
+                Document Management Tasmania (DMTas), previously known as
+                &quot;The Fuji Xerox Business Centre, &quot;has been in business
+                for over 40 years. We&apos;re recognised as Tasmania&apos;s
+                trusted company for multi-function printers, prints,
+                digitisation, and signage. DMTas built its legacy by supplying
+                and servicing Fujifilm&apos;s printers, establishing us as the
+                largest provider of multi-function printers in Tasmania—a feat
+                we are proud of, and we stand by our products and quality
+                service.
               </p>
               <p>
                 Our commitment to growth and ability to provide a comprehensive
@@ -124,7 +125,7 @@ const OurCompanyComponent: React.FC = () => {
                 business with a 75-year legacy and counting. With Hobart
                 Signwriters, we can enhance the visual branding for our clients.
                 The Print Division on Brisbane Street, Hobart and York Street,
-                Launceston, serves as DMTas' retail shopfront, providing
+                Launceston, serves as DMTas&apos; retail shopfront, providing
                 everything from simple prints, posters, books, and brochures to
                 wide-format prints.
               </p>
@@ -134,7 +135,7 @@ const OurCompanyComponent: React.FC = () => {
                 to amplifying your brand visibility. Leveraging our decades of
                 expertise, cutting-edge technology, and our 360° service, DMTas
                 provides a complete ecosystem of solutions that directly enhance
-                your business's visibility, profitability, and control.
+                your business&apos;s visibility, profitability, and control.
               </p>
               <p>
                 This is our story. Partner with Document Management Tasmania
