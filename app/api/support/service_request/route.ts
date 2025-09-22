@@ -26,7 +26,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export const resendBackup = async (data: RequestData): Promise<void> => {
+const resendBackup = async (data: RequestData): Promise<void> => {
   const resend = new Resend(process.env.RESEND_API_KEY);
   const userDetails: UserDetails = data.formValues;
   const emails: string[] = ["webdevelopment@dmtas.com.au"];
