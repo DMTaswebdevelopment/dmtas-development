@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -137,12 +139,6 @@ const OurProducts: React.FC = () => {
       // Update current slide if it changed
       setCurrentSlide((prevSlide) => {
         if (currentDivisionIndex !== prevSlide) {
-          console.log(
-            "Auto-updating slide from",
-            prevSlide,
-            "to",
-            currentDivisionIndex
-          );
           return currentDivisionIndex;
         }
         return prevSlide;
@@ -190,7 +186,6 @@ const OurProducts: React.FC = () => {
     if (isManualNavigation) {
       const timer = setTimeout(() => {
         setIsManualNavigation(false);
-        console.log("Resuming auto-tracking of slides");
       }, 3000); // Resume auto-tracking after 3 seconds
 
       return () => clearTimeout(timer);
@@ -198,19 +193,16 @@ const OurProducts: React.FC = () => {
   }, [isManualNavigation]);
 
   const nextSlide = () => {
-    console.log("Manual navigation: next slide");
     setIsManualNavigation(true);
     setCurrentSlide((prev) => (prev + 1) % divisions.length);
   };
 
   const prevSlide = () => {
-    console.log("Manual navigation: previous slide");
     setIsManualNavigation(true);
     setCurrentSlide((prev) => (prev - 1 + divisions.length) % divisions.length);
   };
 
   const navigateToSlide = (index: number) => {
-    console.log("Manual navigation: navigate to slide", index);
     setIsManualNavigation(true);
     setCurrentSlide(index);
   };

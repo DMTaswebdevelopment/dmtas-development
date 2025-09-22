@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, ReactElement } from "react";
+import React, { useState, useEffect, ReactElement, useRef } from "react";
 import {
   Heart,
   Users,
@@ -23,6 +23,7 @@ interface VisibilityState {
 
 const OurCultureComponent: React.FC = () => {
   const [isVisible, setIsVisible] = useState<VisibilityState>({});
+  const ourCultureRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -92,7 +93,7 @@ const OurCultureComponent: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div ref={ourCultureRef} className="min-h-screen bg-gray-100">
       {/* Hero Section */}
       <div className="relative overflow-hidde">
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8">
@@ -105,7 +106,7 @@ const OurCultureComponent: React.FC = () => {
               <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
             </div>
 
-            <p className="text-xl md:text-2xl text-gray-600 max-w-7xl mx-auto leading-relaxed font-sans">
+            <p className="text-lg md:text-base text-gray-600 max-w-7xl mx-auto leading-relaxed font-sans">
               Culture isn&rsquo;t something written on a wall - it&rsquo;s the
               way we work, treat people, and hold ourselves accountable every
               single day. Our roots are Tasmanian, and that matters. It means we
@@ -151,7 +152,7 @@ const OurCultureComponent: React.FC = () => {
                     <h3 className="text-xl font-bold text-slate-900 mb-4">
                       {value.title}
                     </h3>
-                    <p className="text-slate-600 leading-relaxed">
+                    <p className="text-slate-600 leading-relaxed font-sans text-base ">
                       {value.description}
                     </p>
                   </div>
@@ -188,11 +189,11 @@ const OurCultureComponent: React.FC = () => {
                 Trust & Respect Are Non-Negotiable
               </h3>
               <div className="space-y-4">
-                <p className="text-lg text-slate-700 leading-relaxed font-sans">
+                <p className="text-sm lg:text-base text-slate-700 leading-relaxed font-sans">
                   We support each other, celebrate diverse skills and ideas, and
                   take collective pride in the outcomes we deliver.
                 </p>
-                <p className="text-lg text-slate-700 leading-relaxed font-sans">
+                <p className="text-sm lg:text-base text-slate-700 leading-relaxed font-sans">
                   When our clients face challenges, we rally together as quickly
                   as possible – because every second counts. And when our
                   clients succeed, we see it as a shared achievement, because

@@ -285,12 +285,12 @@ const footerLinks = [
     subTitle: [
       {
         name: "About Us",
-        links: "/support/serviceRequest",
+        links: "/ourcompany",
       },
-      {
-        name: "Our Culture",
-        links: "/support/meterRead",
-      },
+      // {
+      //   name: "Our Culture",
+      //   links: "/ourcompany",
+      // },
       // {
       //   name: "Remote Support",
       //   links: "/support/remoteSupport",

@@ -151,14 +151,51 @@ const HomeServices: React.FC = () => {
                       </p>
                     </div>
 
-                    {/* Read More Button */}
+                    {/* Enhanced Read More Button */}
                     <ButtonComponent
                       type="button"
-                      className={`flex cursor-pointer items-center text-base font-bold font-sans gap-2 ${cardlist.bg} py-3 px-5 w-1/2 whitespace-nowrap justify-between rounded-xl text-black font-semibold group/btn relative z-10`}
+                      className={`
+                        flex cursor-pointer items-center text-base font-bold font-sans gap-3 
+                        ${cardlist.bg} py-3 px-6 w-fit whitespace-nowrap justify-between 
+                        rounded-xl text-black font-semibold group/btn relative z-10
+                        overflow-hidden
+                        transition-all duration-300 ease-out
+                        hover:scale-105 hover:shadow-lg
+                        active:scale-95
+                        
+                        /* Gradient overlay on hover */
+                        before:absolute before:inset-0 before:bg-gradient-to-r 
+                        before:from-blue-500/20 before:via-purple-500/20 before:to-pink-500/20
+                        before:opacity-0 before:transition-opacity before:duration-300
+                        hover:before:opacity-100
+                        
+                        /* Shine effect */
+                        after:absolute after:top-0 after:left-[-100%] after:w-full after:h-full
+                        after:bg-gradient-to-r after:from-transparent after:via-white/30 after:to-transparent
+                        after:skew-x-12 after:transition-all after:duration-700
+                        hover:after:left-[100%]
+                      `}
                     >
-                      <span>{cardlist.button_text}</span>
-                      <div className="2xl:w-8 2xl:h-8 w-6 h-6 bg-gray-100 rounded-full flex items-center justify-center ">
-                        <Play className="2xl:w-4 2xl:h-4 h-2 w-2 fill-current group-hover/btn:text-black" />
+                      <span className="relative z-10 transition-all duration-300 group-hover/btn:tracking-wide">
+                        {cardlist.button_text}
+                      </span>
+                      <div
+                        className="
+                        2xl:w-8 2xl:h-8 w-6 h-6 bg-white/80 rounded-full 
+                        flex items-center justify-center relative z-10
+                        transition-all duration-300 ease-out
+                        group-hover/btn:bg-white group-hover/btn:rotate-90 
+                        group-hover/btn:scale-110 group-hover/btn:shadow-md
+                        group-active/btn:scale-90
+                      "
+                      >
+                        <Play
+                          className="
+                          2xl:w-4 2xl:h-4 h-3 w-3 fill-current text-gray-700
+                          transition-all duration-300 ease-out
+                          group-hover/btn:text-blue-600 group-hover/btn:translate-x-0.5
+                        "
+                        />
                       </div>
                     </ButtonComponent>
                   </div>

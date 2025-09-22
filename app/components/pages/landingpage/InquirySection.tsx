@@ -1,11 +1,28 @@
+"use client";
+
 import React, { useRef, useState } from "react";
-import { Mail, Phone, UserCircle, ChevronDown, Building2 } from "lucide-react";
+import {
+  Mail,
+  Phone,
+  UserCircle,
+  ChevronDown,
+  Building2,
+  Building,
+} from "lucide-react";
 import Image from "next/image";
+import { sendEmail } from "@/app/functions/API";
+import {
+  ParsedData,
+  RequestData,
+  UserDetails,
+} from "@/app/model/interface/RequestDataType";
+import ToasterComponent from "../../template/ToastMessageComponent/ToastMessageComponent";
+import LoaderComponent from "../../template/LoaderComponent/LoaderComponent";
 
 interface FormData {
   brand: string;
-  firstName: string;
-  lastName: string;
+  name: string;
+  company: string;
   email: string;
   phone: string;
   message: string;
@@ -15,24 +32,182 @@ const InquirySection: React.FC = () => {
   const inquiryRef = useRef<HTMLDivElement>(null);
   const [selectedBrand, setSelectedBrand] = useState<string>("");
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+
+  const [showToast, setShowToast] = useState(false);
+  const [title, setTitle] = useState("");
+  const [message, setMessage] = useState("");
+  const [toastType, setToastType] = useState("");
+
+  // Form state
+  const [formData, setFormData] = useState<FormData>({
+    brand: "",
+    name: "",
+    company: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  // Form validation errors
+  const [errors, setErrors] = useState<Partial<FormData>>({});
 
   const brands: string[] = [
     "The Print Division Tasmania",
     "Acrodata",
     "Hobart Signwriters",
   ];
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof FormData]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow: backspace, delete, tab, escape, enter
+    if (
+      [8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (e.keyCode === 65 && e.ctrlKey === true) ||
+      (e.keyCode === 67 && e.ctrlKey === true) ||
+      (e.keyCode === 86 && e.ctrlKey === true) ||
+      (e.keyCode === 88 && e.ctrlKey === true) ||
+      // Allow: home, end, left, right
+      (e.keyCode >= 35 && e.keyCode <= 39)
+    ) {
+      return;
+    }
+    // Ensure that it is a number and stop the keypress
+    if (
+      (e.shiftKey || e.keyCode < 48 || e.keyCode > 57) &&
+      (e.keyCode < 96 || e.keyCode > 105)
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+
+    if (!formData.brand) newErrors.brand = "Please select a brand";
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.company.trim()) newErrors.company = "Company is required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleBrandSelect = (brand: string): void => {
     setSelectedBrand(brand);
+    setFormData((prev) => ({ ...prev, brand: brand }));
+
     setIsDropdownOpen(false);
+
+    // Clear brand error if it exists
+    if (errors.brand) {
+      setErrors((prev) => ({ ...prev, brand: "" }));
+    }
   };
 
-  const handleSubmit = (): void => {
-    alert(`Form submitted for ${selectedBrand || "General Inquiry"}!`);
+  const handleSubmit = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const formValues: UserDetails = {
+        Name: formData.name,
+        Company: formData.company,
+        Email: formData.email,
+        Phone: formData.phone,
+        Message: formData.message,
+        Brand: formData.brand,
+      };
+
+      // Provide parsedData - adjust these values as needed for your use case
+      const parsedData: ParsedData = {
+        email: formData.email,
+        title: `${formData.brand}`,
+      };
+
+      const requestData: RequestData = {
+        formValues,
+        parsedData,
+      };
+
+      sendEmail(requestData).then((response) => {
+        if (response.statusCode === 200) {
+          setShowToast(true);
+          setTitle("Success");
+          setMessage("Your inquiry has been submitted successfully.");
+          setToastType("success");
+          setTimeout(() => {
+            setShowToast(false);
+            setIsSubmitting(false);
+            // Reset form
+            setFormData({
+              brand: "",
+              name: "",
+              company: "",
+              email: "",
+              phone: "",
+              message: "",
+            });
+            setSelectedBrand("");
+          }, 3000);
+        } else {
+          setShowToast(true);
+          setTitle("Error");
+          setMessage(
+            "There was an issue submitting the form. Please try again."
+          );
+          setToastType("error");
+          setTimeout(() => {
+            setIsSubmitting(false);
+            setShowToast(false);
+            // Reset form
+            setFormData({
+              brand: "",
+              name: "",
+              company: "",
+              email: "",
+              phone: "",
+              message: "",
+            });
+            setSelectedBrand("");
+          }, 3000);
+        }
+      });
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
     <div id="inquiry-section" ref={inquiryRef} className="min-h-screen w-full">
+      <ToasterComponent
+        isOpen={showToast}
+        title={title}
+        message={message}
+        onClose={setShowToast}
+        type={toastType}
+      />
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Left Section - Images */}
         <div className="w-full lg:w-1/2 bg-blue-300/10 p-4 sm:p-8 flex flex-col gap-6 sm:gap-10 items-center justify-center relative min-h-[50vh] lg:min-h-screen">
@@ -79,7 +254,9 @@ const InquirySection: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="w-full border-b-2 border-gray-200 bg-transparent pb-2 text-left focus:border-black focus:outline-none transition-colors flex justify-between items-center"
+                    className={`w-full border-b-2 cursor-pointer ${
+                      errors.brand ? "border-red-500" : "border-gray-200"
+                    }  bg-transparent pb-2 text-left focus:border-black focus:outline-none transition-colors flex justify-between items-center`}
                   >
                     <span
                       className={selectedBrand ? "text-black" : "text-gray-500"}
@@ -93,6 +270,10 @@ const InquirySection: React.FC = () => {
                     />
                   </button>
 
+                  {errors.brand && (
+                    <p className="text-red-500 text-sm mt-1">{errors.brand}</p>
+                  )}
+
                   {isDropdownOpen && (
                     <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-md shadow-lg mt-1 z-10">
                       {brands.map((brand: string, index: number) => (
@@ -100,7 +281,7 @@ const InquirySection: React.FC = () => {
                           key={index}
                           type="button"
                           onClick={() => handleBrandSelect(brand)}
-                          className="w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors first:rounded-t-md last:rounded-b-md"
+                          className="w-full text-left px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors first:rounded-t-md last:rounded-b-md"
                         >
                           {brand}
                         </button>
@@ -115,22 +296,40 @@ const InquirySection: React.FC = () => {
                 <div className="flex flex-col">
                   <label className="text-black font-bold mb-2 flex items-center gap-2">
                     <UserCircle className="w-4 h-4" />
-                    <span>First Name</span>
+                    <span>Name</span>
                   </label>
                   <input
                     type="text"
-                    className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    className={`border-b-2 ${
+                      errors.name ? "border-red-500" : "border-gray-200"
+                    } bg-transparent pb-2 focus:border-black focus:outline-none transition-colors`}
                   />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <label className="text-black font-bold mb-2 flex items-center gap-2">
-                    <UserCircle className="w-4 h-4" />
-                    <span>Last Name</span>
+                    <Building className="w-4 h-4" />
+                    <span>Company</span>
                   </label>
                   <input
                     type="text"
-                    className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleInputChange}
+                    className={`border-b-2 ${
+                      errors.company ? "border-red-500" : "border-gray-200"
+                    } bg-transparent pb-2 focus:border-black focus:outline-none transition-colors`}
                   />
+                  {errors.company && (
+                    <p className="text-red-500 text-sm mt-1">
+                      {errors.company}
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -143,8 +342,16 @@ const InquirySection: React.FC = () => {
                   </label>
                   <input
                     type="email"
-                    className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className={`border-b-2 ${
+                      errors.email ? "border-red-500" : "border-gray-200"
+                    } bg-transparent pb-2 focus:border-black focus:outline-none transition-colors`}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <label className="text-black font-bold mb-2 flex items-center gap-2">
@@ -153,8 +360,19 @@ const InquirySection: React.FC = () => {
                   </label>
                   <input
                     type="tel"
-                    className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown} // Prevent non-numeric input
+                    inputMode="numeric" // Shows numeric keypad on mobile
+                    pattern="[0-9]*" // HTML5 pattern for numbers only
+                    className={`border-b-2 ${
+                      errors.phone ? "border-red-500" : "border-gray-200"
+                    } bg-transparent pb-2 focus:border-black focus:outline-none transition-colors`}
                   />
+                  {errors.phone && (
+                    <p className="text-red-500 text-sm mt-1">{errors.phone}</p>
+                  )}
                 </div>
               </div>
 
@@ -163,18 +381,30 @@ const InquirySection: React.FC = () => {
                 <label className="text-black font-bold mb-2">Message</label>
                 <textarea
                   rows={5}
-                  className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors resize-none"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  className={`border-b-2 ${
+                    errors.message ? "border-red-500" : "border-gray-200"
+                  } bg-transparent pb-2 focus:border-black focus:outline-none transition-colors`}
                   placeholder="Tell us about your project/ general enquiry..."
                 />
+                {errors.message && (
+                  <p className="text-red-500 text-sm mt-1">{errors.message}</p>
+                )}
               </div>
             </div>
 
             <div className="mt-8 sm:mt-10">
               <button
-                className="bg-black text-white w-full sm:w-52 py-3 px-8 font-bold cursor-pointer rounded-full hover:bg-gray-800 transition-colors"
+                disabled={isSubmitting}
+                type="submit"
+                className={`bg-black text-white ${isSubmitting ? "cursor-not-allowed" : " cursor-pointer "} w-full sm:w-52 py-3 px-8 font-bold rounded-xl  shadow-lg hover:shadow-2xl hover:shadow-black/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50`}
                 onClick={handleSubmit}
               >
-                Submit
+                {isSubmitting && <LoaderComponent />}
+
+                {!isSubmitting ? "Submit" : "Sending..."}
               </button>
             </div>
           </div>

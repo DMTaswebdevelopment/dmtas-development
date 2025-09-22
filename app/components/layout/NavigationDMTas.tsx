@@ -25,13 +25,38 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { useRouter } from "next/navigation";
-import { PuzzleIcon } from "lucide-react";
+import {
+  AlertTriangle,
+  Building,
+  CheckCircle,
+  ChevronDown,
+  Cpu,
+  Gauge,
+  Mail,
+  Phone,
+  PuzzleIcon,
+  UserCircle,
+} from "lucide-react";
 import { productsMenu } from "@/app/constants";
 import gsap from "gsap";
 
 import UnderAnimationComponent from "../template/UnderAnimationComponent/UnderAnimationComponent";
 import ButtonComponent from "../template/ButtonComponent/ButtonComponent";
 import useWidthHook from "@/app/hooks/useWidthHooks";
+import ModalComponent from "../template/ModalComponent/ModalComponent";
+import RemoteSupportComponent from "../template/RemoteSupportComponent/RemoteSupportComponent";
+import {
+  sendMeterReadEmail,
+  sendServiceRequestEmail,
+} from "@/app/functions/API";
+import {
+  ParsedData,
+  RequestData,
+  UserDetails,
+} from "@/app/model/interface/RequestDataType";
+import { FormData } from "@/app/model/interface/FormDataType";
+import ToasterComponent from "../template/ToastMessageComponent/ToastMessageComponent";
+import LoaderComponent from "../template/LoaderComponent/LoaderComponent";
 
 // Define interfaces for better type safety
 
@@ -39,6 +64,11 @@ const NavigationDMTas: React.FC = () => {
   const width = useWidthHook();
   const router = useRouter();
   const navRef = useRef<HTMLDivElement>(null);
+  const formContainerRef = useRef<HTMLDivElement>(null);
+  const serviceFieldsRef = useRef<HTMLDivElement>(null);
+  const meterFieldsRef = useRef<HTMLDivElement>(null);
+  const removeFieldsRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef(null);
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [isServicesOpen, setIsServicesOpen] = useState<boolean>(false);
@@ -52,7 +82,60 @@ const NavigationDMTas: React.FC = () => {
     "Multifunction Printers"
   );
 
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<string>("");
+
+  // send email service request (start) ============================================================>
+  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  // Form validation errors
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+
+  const [formData, setFormData] = useState<FormData>({
+    name: "",
+    email: "",
+    phone: "",
+    business_name: "",
+    machine_id: "",
+    error_code: "",
+    serial_number: "",
+    meter_1: "",
+    meter_2: "",
+    meter_3: "",
+    meter_4: "",
+    meter_5: "",
+    message: "",
+  });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error for this field when user starts typing
+    if (errors[name as keyof FormData]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+  // send email service request (start) ============================================================>
+
   const [isMenuClicked, setIsMenuClicked] = useState<boolean>(false); // Track click state
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
+  // modal (start) =================================================>
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState<boolean>(false);
+  // modal (end) =================================================>
+
+  // 1. Add this type definition at the top with your other interfaces
+  type HardwareSupportMenuItem =
+    | "Service Request"
+    | "Meter Read"
+    | "Remote Support"
+    | "Drivers and Support"
+    | "";
 
   // const updateSelectedSubNav = useSubGlobalNavigation(
   //   (state) => state.setSubGlobalNavigation
@@ -186,11 +269,202 @@ const NavigationDMTas: React.FC = () => {
     },
   };
 
+  // 2. Update your menuItems array to be properly typed
+  const menuItems: HardwareSupportMenuItem[] = [
+    "Service Request",
+    "Meter Read",
+    "Remote Support",
+    "Drivers and Support",
+  ];
+
+  const [menuLists, setMenuLists] =
+    useState<HardwareSupportMenuItem>("Service Request");
+  const [selectedMenu, setSelectedMenu] = useState<string>("Service Request");
+
   const handleClick = (): void => {
-    router.push("/support"); // Navigate to "/support"
+    setIsModalOpen((prev) => !prev);
+    // router.push("/support"); // Navigate to "/support"
+    // event("Hardware Support", {
+    //   info: "User's clicked the button Hardware Support",
+    // });
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // Allow: backspace, delete, tab, escape, enter
+    if (
+      [8, 9, 27, 13, 46].indexOf(e.keyCode) !== -1 ||
+      // Allow: Ctrl+A, Ctrl+C, Ctrl+V, Ctrl+X
+      (e.keyCode === 65 && e.ctrlKey === true) ||
+      (e.keyCode === 67 && e.ctrlKey === true) ||
+      (e.keyCode === 86 && e.ctrlKey === true) ||
+      (e.keyCode === 88 && e.ctrlKey === true) ||
+      // Allow: home, end, left, right
+      (e.keyCode >= 35 && e.keyCode <= 39)
+    ) {
+      return;
+    }
+    // Ensure that it is a number and stop the keypress
+    if (
+      (e.shiftKey || e.keyCode < 48 || e.keyCode > 57) &&
+      (e.keyCode < 96 || e.keyCode > 105)
+    ) {
+      e.preventDefault();
+    }
+  };
+
+  const handleItemClick = (item: string) => {
+    if (item === selectedMenu) return;
+
+    if (item === "Drivers and Support") {
+      window.open(
+        "https://support-fb.fujifilm.com/setupSupport.do?cid=2&ctry_code=AU&lang_code=en",
+        "_blank"
+      );
+
+      // Analytics tracking
+      event("Hardware Support Item Selected", {
+        info: `User selected: ${item} - Opened external link`,
+      });
+
+      return;
+    }
+
+    // GSAP transition animation
+    if (formContainerRef.current) {
+      const tl = gsap.timeline();
+
+      // Fade out current form fields
+      tl.to(
+        [
+          serviceFieldsRef.current,
+          meterFieldsRef.current,
+          removeFieldsRef.current,
+        ],
+        {
+          opacity: 0,
+          y: -30,
+          duration: 0.3,
+          ease: "power2.out",
+        }
+      )
+        .set(
+          [
+            serviceFieldsRef.current,
+            meterFieldsRef.current,
+            removeFieldsRef.current,
+          ],
+          {
+            display: "none",
+          }
+        )
+        .call(() => {
+          // Update the state after fade out
+          switch (item) {
+            case "Service Request":
+              setMenuLists("Service Request");
+              setSelectedMenu("Service Request");
+              break;
+            case "Meter Read":
+              setMenuLists("Meter Read");
+              setSelectedMenu("Meter Read");
+              break;
+            case "Remote Support":
+              setMenuLists("Remote Support");
+              setSelectedMenu("Remote Support");
+              break;
+            case "Drivers and Support":
+              break;
+            default:
+              break;
+          }
+          setIsSupportModalOpen(false);
+        })
+        .call(() => {
+          // Show the new form fields
+          let targetRef = null;
+          switch (item) {
+            case "Service Request":
+              targetRef = serviceFieldsRef.current;
+              break;
+            case "Meter Read":
+              targetRef = meterFieldsRef.current;
+              break;
+            case "Remove Support":
+              targetRef = removeFieldsRef.current;
+              break;
+            default:
+              break;
+          }
+
+          if (targetRef) {
+            gsap.set(targetRef, { display: "contents" });
+            gsap.fromTo(
+              targetRef.children,
+              {
+                opacity: 0,
+                y: 40,
+                scale: 0.9,
+              },
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 0.6,
+                ease: "back.out(1.4)",
+                stagger: 0.08,
+              }
+            );
+          }
+        });
+    } else {
+      // Fallback for when refs aren't available
+      switch (item) {
+        case "Service Request":
+          setMenuLists("Service Request");
+          setSelectedMenu("Service Request");
+          break;
+        case "Meter Read":
+          setMenuLists("Meter Read");
+          setSelectedMenu("Meter Read");
+          break;
+        case "Remote Support":
+          setMenuLists("Remote Support");
+          setSelectedMenu("Remote Support");
+          break;
+        case "Drivers and Support":
+          break;
+        default:
+          break;
+      }
+      setIsSupportModalOpen(false);
+    }
+
+    // Analytics tracking
+    event("Hardware Support Item Selected", {
+      info: `User selected: ${item}`,
+    });
+  };
+
+  const handlePuzzleClick = (): void => {
+    router.push("/puzzle"); // Navigate to "/support"
     event("Hardware Support", {
       info: "User's clicked the button Hardware Support",
     });
+  };
+
+  const validateForm = (): boolean => {
+    const newErrors: Partial<FormData> = {};
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Please enter a valid email";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
   const contactsHover = (): void => {
@@ -265,8 +539,192 @@ const NavigationDMTas: React.FC = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const handleSubmitHander = async (e: React.FormEvent): Promise<void> => {
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      let formValues: UserDetails;
+      let parsedData: ParsedData;
+      let requestData: RequestData;
+
+      if (menuLists === "Service Request") {
+        formValues = {
+          Name: formData.name,
+          Email: formData.email,
+          Phone: formData.phone,
+          BusinessName: formData.business_name || "",
+          MachineId: formData.machine_id || "",
+          ErrorCode: formData.error_code,
+          Message: formData.message,
+        };
+
+        // Provide parsedData - adjust these values as needed for your use case
+        parsedData = {
+          email: formData.email,
+          title: `${formData.business_name}`,
+        };
+
+        requestData = {
+          formValues,
+          parsedData,
+        };
+
+        sendServiceRequestEmail(requestData).then((response) => {
+          if (response.statusCode === 200) {
+            setShowToast(true);
+            setTitle("Success");
+            setMessage("Your service request has been submitted successfully.");
+            setToastType("success");
+            setTimeout(() => {
+              setShowToast(false);
+              setIsSubmitting(false);
+              // Reset form
+              setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                business_name: "",
+                machine_id: "",
+                error_code: "",
+                serial_number: "",
+                meter_1: "",
+                meter_2: "",
+                meter_3: "",
+                meter_4: "",
+                meter_5: "",
+                message: "",
+              });
+            }, 3000);
+          } else {
+            setShowToast(true);
+            setTitle("Error");
+            setMessage(
+              "Your Service Request has not been submitted successfully."
+            );
+            setToastType("error");
+            setTimeout(() => {
+              setShowToast(false);
+              setIsSubmitting(false);
+              // Reset form
+              setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                business_name: "",
+                machine_id: "",
+                error_code: "",
+                serial_number: "",
+                meter_1: "",
+                meter_2: "",
+                meter_3: "",
+                meter_4: "",
+                meter_5: "",
+                message: "",
+              });
+            }, 3000);
+          }
+        });
+      } else if (menuLists === "Meter Read") {
+        formValues = {
+          Name: formData.name,
+          Email: formData.email,
+          Phone: formData.phone,
+          IDSN: formData.serial_number,
+          Meter1: formData.meter_1,
+          Meter2: formData.meter_2,
+          Meter3: formData.meter_3,
+          Meter4: formData.meter_4,
+          Meter5: formData.meter_5,
+        };
+
+        // Provide parsedData - adjust these values as needed for your use case
+        parsedData = {
+          email: formData.email,
+          title: `${formData.serial_number}`,
+        };
+
+        requestData = {
+          formValues,
+          parsedData,
+        };
+
+        sendMeterReadEmail(requestData).then((response) => {
+          if (response.statusCode === 200) {
+            setShowToast(true);
+            setTitle("Success");
+            setMessage("Your Meter Read has been submitted successfully.");
+            setToastType("success");
+            setTimeout(() => {
+              setShowToast(false);
+              setIsSubmitting(false);
+              // Reset form
+              setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                business_name: "",
+                machine_id: "",
+                error_code: "",
+                serial_number: "",
+                meter_1: "",
+                meter_2: "",
+                meter_3: "",
+                meter_4: "",
+                meter_5: "",
+                message: "",
+              });
+            }, 3000);
+          } else {
+            setShowToast(true);
+            setTitle("Error");
+            setMessage("Your Meter Read has not been submitted successfully.");
+            setToastType("error");
+            setTimeout(() => {
+              setShowToast(false);
+              // Reset form
+              setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                business_name: "",
+                machine_id: "",
+                error_code: "",
+                serial_number: "",
+                meter_1: "",
+                meter_2: "",
+                meter_3: "",
+                meter_4: "",
+                meter_5: "",
+                message: "",
+              });
+              setIsSubmitting(false);
+            }, 3000);
+          }
+        });
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
+      <ToasterComponent
+        isOpen={showToast}
+        title={title}
+        message={message}
+        onClose={setShowToast}
+        type={toastType}
+      />
       <nav
         ref={navRef}
         className={`z-50 w-full ${
@@ -292,7 +750,7 @@ const NavigationDMTas: React.FC = () => {
               onMouseLeave={onMouseLeaveHandler}
               className={`gap-12 hidden lg:block ${
                 isFixed ? "text-white" : "text-[#252324]"
-              }  items-center 4K:text-4xl z-10 tracking-wider font-sans font-semibold whitespace-nowrap`}
+              }  items-center 4K:text-4xl  z-10 tracking-wider font-sans font-semibold whitespace-nowrap`}
             >
               <div className="w-full flex lg:gap-4 xl:gap-5 text-sm lg:text-base xl:text-lg items-center tracking-normal">
                 {/* <div>
@@ -485,7 +943,7 @@ const NavigationDMTas: React.FC = () => {
                   className={`group relative ${
                     isFixed ? "text-white" : "text-[#252324]"
                   } font-semibold text-sm border p-2 px-1 md:px-2.5 cursor-pointer rounded-xl hover:bg-red-600 hover:text-white transition duration-300 ease-out lg:px-5 2xl:px-8 border-red-600 tracking-normal lg:text-base xl:text-lg font-sans flex items-center justify-center gap-1`}
-                  onClick={handleClick}
+                  onClick={handlePuzzleClick}
                 >
                   <PuzzleIcon
                     className={`w-4 h-4 xl:w-5 xl:h-5  ${
@@ -498,23 +956,26 @@ const NavigationDMTas: React.FC = () => {
                 </ButtonComponent>
               </div>
 
-              <ButtonComponent
-                className={`
-                 bg-[#007EC6] text-white cursor-pointer font-bold p-2 px-1 md:px-2.5 rounded-xl lg:px-5 2xl:px-8 
-                 tracking-wide text-sm lg:text-base font-sans flex items-center justify-center whitespace-nowrap
-                 relative overflow-hidden
-                 transition-all ease-in-out duration-300
-                 hover:bg-[#0056b3] hover:scale-105 hover:shadow-lg hover:shadow-[#007EC6]/30
-                 hover:-translate-y-1 hover:brightness-110
-                 active:scale-95 active:translate-y-0
-                 before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
-                 before:translate-x-[-100%] before:transition-transform before:duration-700
-                 hover:before:translate-x-[100%]
-                `}
-                onClick={handleClick}
-              >
-                Hardware Support
-              </ButtonComponent>
+              <div className="" ref={dropdownRef} onMouseEnter={puzzleHover}>
+                <button
+                  className={`
+                  bg-[#007EC6] text-white cursor-pointer font-bold px-1 md:px-2.5 rounded-xl lg:px-5 2xl:px-8 
+                  tracking-wide text-sm lg:text-base font-sans flex items-center justify-center whitespace-nowrap
+                  relative overflow-hidden py-3
+                  transition-all ease-in-out duration-300
+                  hover:bg-[#0056b3] hover:scale-105 hover:shadow-lg hover:shadow-[#007EC6]/30
+                  hover:-translate-y-1 hover:brightness-110
+                  active:scale-95 active:translate-y-0
+                  before:absolute before:inset-0 before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent
+                  before:translate-x-[-100%] before:transition-transform before:duration-700
+                  hover:before:translate-x-[100%]
+               
+                 `}
+                  onClick={handleClick}
+                >
+                  <span className="mr-2">Hardware Support</span>
+                </button>
+              </div>
             </div>
 
             {/* </Link> */}
@@ -799,6 +1260,309 @@ const NavigationDMTas: React.FC = () => {
         </AnimatePresence>
         {/* Mobile Navigation Menu (end) =========================================================> */}
       </nav>
+
+      <ModalComponent
+        isOpen={isModalOpen}
+        onCloseHandler={() => setIsModalOpen(false)}
+        header={
+          <div className="relative flex-1 mb-5">
+            <button
+              onClick={() => setIsSupportModalOpen((prev) => !prev)}
+              className="flex items-center gap-3 cursor-pointer px-4 py-3 bg-gray-50 hover:bg-gray-100 rounded-xl transition-all duration-200 border border-gray-200 group"
+            >
+              <span className="font-semibold text-gray-700">
+                {selectedMenu}
+              </span>
+              <ChevronDown
+                className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                  isSupportModalOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {isSupportModalOpen && (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-10">
+                {menuItems.map((item, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleItemClick(item)}
+                    disabled={item === selectedMenu}
+                    className={`w-full text-left px-4 py-3 flex items-center gap-3 transition-colors ${
+                      item === selectedMenu
+                        ? "bg-blue-50 text-blue-600 cursor-not-allowed"
+                        : "hover:bg-gray-50 text-gray-700 cursor-pointer"
+                    } ${
+                      index !== menuItems.length - 1
+                        ? "border-b border-gray-100"
+                        : ""
+                    }`}
+                  >
+                    {/* {getMenuIcon(item)} */}
+                    <span className="font-medium">{item}</span>
+                    {item === selectedMenu && (
+                      <CheckCircle className="w-4 h-4 ml-auto text-blue-600" />
+                    )}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        }
+        body={
+          <div className="space-y-8">
+            {selectedMenu === "Service Request" ||
+            selectedMenu === "Meter Read" ? (
+              <>
+                {/* Personal Information Section */}
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <div className="w-1 h-6 bg-blue-600 rounded-full"></div>
+                  Personal Information
+                </h3>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8 mb-10">
+                  <div className="flex flex-col">
+                    <label className="text-black font-bold mb-2 flex items-center gap-2">
+                      <UserCircle className="w-4 h-4" />
+                      <span>Name</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-black font-bold mb-2 flex items-center gap-2">
+                      <Mail className="w-4 h-4" />
+                      <span>Email</span>
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  <div className="flex flex-col">
+                    <label className="text-black font-bold mb-2 flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      <span>Phone</span>
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown} // Prevent non-numeric input
+                      inputMode="numeric" // Shows numeric keypad on mobile
+                      pattern="[0-9]*" // HTML5 pattern for numbers only
+                      className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                    />
+                  </div>
+
+                  {/* Service Request Fields */}
+                  <div
+                    ref={serviceFieldsRef}
+                    style={{
+                      display:
+                        selectedMenu === "Service Request"
+                          ? "contents"
+                          : "none",
+                    }}
+                  >
+                    <div className="flex flex-col form-field">
+                      <label className="text-black font-bold mb-2 flex items-center gap-2">
+                        <Building className="w-4 h-4" />
+                        <span>Business Name</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="business_name"
+                        value={formData.business_name}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-all duration-300 hover:border-blue-400"
+                      />
+                    </div>
+
+                    <div className="flex flex-col form-field">
+                      <label className="text-black font-bold mb-2 flex items-center gap-2">
+                        <Cpu className="w-4 h-4" />
+                        <span>Machine ID</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="machine_id"
+                        value={formData.machine_id}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-all duration-300 hover:border-blue-400"
+                      />
+                    </div>
+
+                    <div className="flex flex-col form-field">
+                      <label className="text-black font-bold mb-2 flex items-center gap-2">
+                        <AlertTriangle className="w-4 h-4" />
+                        <span>Error Code</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="error_code"
+                        value={formData.error_code}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-all duration-300 hover:border-blue-400"
+                      />
+                    </div>
+                  </div>
+                  {selectedMenu === "Meter Read" && (
+                    <div className="flex flex-col">
+                      <label className="text-black font-bold mb-2 flex items-center gap-2">
+                        <Cpu className="w-4 h-4" />
+                        <span>ID Number/Serial Number</span>
+                      </label>
+                      <input
+                        type="text"
+                        name="serial_number"
+                        value={formData.serial_number}
+                        onChange={handleInputChange}
+                        className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Meter Read Fields */}
+                {selectedMenu === "Meter Read" && (
+                  <>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+                      <div className="w-1 h-6 bg-green-500 rounded-full"></div>
+                      Meter Information
+                    </h3>
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
+                      <div className="flex flex-col">
+                        <label className="text-black font-bold mb-2 flex items-center gap-2">
+                          <Gauge className="w-4 h-4" />
+                          <span>Meter 1</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="meter_1"
+                          value={formData.meter_1}
+                          onChange={handleInputChange}
+                          className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col">
+                        <label className="text-black font-bold mb-2 flex items-center gap-2">
+                          <Gauge className="w-4 h-4" />
+                          <span>Meter 2</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="meter_2"
+                          value={formData.meter_2}
+                          onChange={handleInputChange}
+                          className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col">
+                        <label className="text-black font-bold mb-2 flex items-center gap-2">
+                          <Gauge className="w-4 h-4" />
+                          <span>Meter 3</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="meter_3"
+                          value={formData.meter_3}
+                          onChange={handleInputChange}
+                          className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col">
+                        <label className="text-black font-bold mb-2 flex items-center gap-2">
+                          <Gauge className="w-4 h-4" />
+                          <span>Meter 4</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="meter_4"
+                          value={formData.meter_4}
+                          onChange={handleInputChange}
+                          className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                        />
+                      </div>
+
+                      <div className="flex flex-col">
+                        <label className="text-black font-bold mb-2 flex items-center gap-2">
+                          <Gauge className="w-4 h-4" />
+                          <span>Meter 5</span>
+                        </label>
+                        <input
+                          type="text"
+                          name="meter_5"
+                          value={formData.meter_5}
+                          onChange={handleInputChange}
+                          className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors"
+                        />
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* Message Field */}
+                {selectedMenu === "Service Request" && (
+                  <div className="flex flex-col">
+                    <label className="text-black font-bold mb-2">Message</label>
+                    <textarea
+                      rows={5}
+                      name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      className="border-b-2 border-gray-200 bg-transparent pb-2 focus:border-black focus:outline-none transition-colors resize-none"
+                      placeholder="Tell us about your project/ general enquiry..."
+                    />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <RemoteSupportComponent />
+              </>
+            )}
+          </div>
+        }
+        footer={
+          <div>
+            {(selectedMenu === "Service Request" ||
+              selectedMenu === "Meter Read") && (
+              <div className="pt-10 ">
+                <div className="w-full flex justify-end">
+                  <button
+                    disabled={isSubmitting}
+                    className={`w-1/3 px-10 ${isSubmitting ? "cursor-not-allowed" : "cursor-allowed"} py-3 rounded-xl  bg-black text-white font-medium shadow-lg hover:shadow-2xl hover:shadow-black/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50`}
+                    onClick={handleSubmitHander}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <LoaderComponent />
+                        Sending...
+                      </div>
+                    ) : (
+                      "Submit"
+                    )}
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        }
+      />
     </>
   );
 };
