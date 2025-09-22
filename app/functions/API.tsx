@@ -8,7 +8,7 @@ export const sendEmail = async (
   try {
     const response = await postFetch("/api/contact", data);
     return response as SendEmailResponseType;
-  } catch (error) {
+  } catch {
     throw new Error("Error: Unable to send email");
   }
 };
@@ -19,7 +19,7 @@ export const sendServiceRequestEmail = async (
   try {
     const response = await postFetch("/api/support/service_request", data);
     return response as SendEmailResponseType;
-  } catch (error) {
+  } catch {
     throw new Error("Error: Unable to send email");
   }
 };
@@ -30,7 +30,7 @@ export const sendMeterReadEmail = async (
   try {
     const response = await postFetch("/api/support/meter_read", data);
     return response as SendEmailResponseType;
-  } catch (error) {
+  } catch {
     throw new Error("Error: Unable to send email");
   }
 };

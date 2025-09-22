@@ -27,6 +27,36 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+export const resendBackup = async (data: RequestData): Promise<void> => {
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  const userDetails: UserDetails = data.formValues;
+  const emails: string[] = ["webdevelopment@dmtas.com.au"];
+
+  const { error } = await resend.emails.send({
+    from: "onboarding@resend.dev",
+    to: emails, // This is where the email will be sent
+    subject: "New message from DMTas website",
+    react: MeterRead({
+      Name: userDetails.Name,
+      Email: userDetails.Email,
+      Phone: userDetails.Phone,
+      IDSN: userDetails.IDSN || "",
+      Meter1: userDetails.Meter1 || "",
+      Meter2: userDetails.Meter2 || "",
+      Meter3: userDetails.Meter3 || "",
+      Meter4: userDetails.Meter4 || "",
+      Meter5: userDetails.Meter5 || "",
+    }) as React.ReactElement,
+  });
+
+  if (error) {
+    console.log(error);
+    return;
+  }
+
+  return;
+};
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
   const data: RequestData = await request.json();
   const userDetails: UserDetails = data.formValues;
@@ -78,33 +108,3 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ message: "Email not sent" });
   }
 }
-
-export const resendBackup = async (data: RequestData): Promise<void> => {
-  const resend = new Resend(process.env.RESEND_API_KEY);
-  const userDetails: UserDetails = data.formValues;
-  const emails: string[] = ["webdevelopment@dmtas.com.au"];
-
-  const { error } = await resend.emails.send({
-    from: "onboarding@resend.dev",
-    to: emails, // This is where the email will be sent
-    subject: "New message from DMTas website",
-    react: MeterRead({
-      Name: userDetails.Name,
-      Email: userDetails.Email,
-      Phone: userDetails.Phone,
-      IDSN: userDetails.IDSN || "",
-      Meter1: userDetails.Meter1 || "",
-      Meter2: userDetails.Meter2 || "",
-      Meter3: userDetails.Meter3 || "",
-      Meter4: userDetails.Meter4 || "",
-      Meter5: userDetails.Meter5 || "",
-    }) as React.ReactElement,
-  });
-
-  if (error) {
-    console.log(error);
-    return;
-  }
-
-  return;
-};
