@@ -4,6 +4,20 @@ import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Division } from "@/app/model/interface/DivisionType";
 import { ScrollPatternItem } from "../../../model/interface/ScrollPatternItemType";
+import { useSearchParams } from "next/navigation";
+
+const SearchParamsHandler: React.FC<{
+  onScrollTo: (scrollTo: string | null) => void;
+}> = ({ onScrollTo }) => {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const scrollTo = searchParams.get("aboutus");
+    onScrollTo(scrollTo);
+  }, [searchParams, onScrollTo]);
+
+  return null;
+};
 
 const OurProducts: React.FC = () => {
   // Sample data for demonstration

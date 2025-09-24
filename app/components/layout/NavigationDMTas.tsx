@@ -460,7 +460,7 @@ const NavigationDMTas: React.FC = () => {
   };
 
   const handlePuzzleClick = (): void => {
-    router.push("/puzzle"); // Navigate to "/support"
+    router.push("/puzzle/login"); // Navigate to "/support"
     event("Hardware Support", {
       info: "User's clicked the button Hardware Support",
     });
@@ -846,7 +846,7 @@ const NavigationDMTas: React.FC = () => {
                 </motion.div>
 
                 <Link
-                  href={"/services/contact/about#top"}
+                  href={"/products"}
                   onMouseEnter={productHover}
                   onMouseLeave={() => setIsProductHover(false)}
                 >

@@ -285,21 +285,20 @@ const footerLinks = [
     subTitle: [
       {
         name: "About Us",
-        links: "/ourcompany",
+        links: "/ourcompany/#aboutus",
       },
-      // {
-      //   name: "Our Culture",
-      //   links: "/ourcompany",
-      // },
-      // {
-      //   name: "Remote Support",
-      //   links: "/support/remoteSupport",
-      // },
-      // {
-      //   name: "Driver and Support",
-      //   links:
-      //     "https://support-fb.fujifilm.com/setupSupport.do?cid=2&ctry_code=AU&lang_code=en",
-      // },
+      {
+        name: "Mission & Vision",
+        links: "/ourcompany/#missionvision",
+      },
+      {
+        name: "Our Team",
+        links: "/ourcompany/#ourteam",
+      },
+      {
+        name: "Our Culture",
+        links: "/ourcompany/#ourculture",
+      },
     ],
   },
   {

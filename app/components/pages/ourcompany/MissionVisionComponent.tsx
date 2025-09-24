@@ -54,7 +54,7 @@ const MissionVisionComponent: React.FC = () => {
   );
 
   return (
-    <div className="py-32 px-7 sm:px-10 2xl:px-28">
+    <div id="missionvision" className="py-32 px-7 sm:px-10 2xl:px-28">
       <div className="flex items-center justify-center max-w-7xl mx-auto">
         {/* Services Cards */}
         <div

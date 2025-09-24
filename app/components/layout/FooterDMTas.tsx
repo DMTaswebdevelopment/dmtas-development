@@ -13,8 +13,10 @@ import iso9001 from "@/public/ISO9001_Logo.svg";
 import iso27001 from "@/public/ISO27001_Logo.svg";
 import useWidthHook from "@/app/hooks/useWidthHooks";
 import { footerLinks, socialLinks } from "@/app/constants";
+import { useRouter } from "next/navigation";
 
 const FooterDMTas = () => {
+  const router = useRouter(); // Added router initialization
   const width = useWidthHook();
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({});
 
@@ -23,6 +25,24 @@ const FooterDMTas = () => {
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLAnchorElement>,
+    href: string
+  ) => {
+    // Only intercept hash links
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const id = href.replace("#", "");
+      const el = document.getElementById(id);
+
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Remove hash from URL, stay on /ourcompany
+        router.replace("/ourcompany", { scroll: false });
+      }
+    }
   };
 
   const DesktopFooter = () => (
@@ -79,8 +99,9 @@ const FooterDMTas = () => {
                 {section.subTitle.map((item, i) => (
                   <li key={i}>
                     {item.links ? (
-                      <a
+                      <Link
                         href={item.links}
+                        onClick={(e) => handleClick(e, item.links)} // Added handleClick
                         className="text-gray-300 text-sm font-normal hover:text-white hover:underline font-aktiv tracking-wide transition-colors"
                         target={
                           item.links.startsWith("http") ? "_blank" : "_self"
@@ -92,7 +113,7 @@ const FooterDMTas = () => {
                         }
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     ) : (
                       <span className="text-gray-300 text-sm font-normal font-aktiv tracking-wide">
                         {item.name}
@@ -262,7 +283,7 @@ const FooterDMTas = () => {
                     {section.subTitle.map((item, i) => (
                       <li key={i}>
                         {item.links ? (
-                          <a
+                          <Link
                             href={item.links}
                             className="text-white text-sm font-normal block hover:text-gray-300 transition-colors"
                             target={
@@ -275,7 +296,7 @@ const FooterDMTas = () => {
                             }
                           >
                             {item.name}
-                          </a>
+                          </Link>
                         ) : (
                           <span className="text-white text-sm font-normal block">
                             {item.name}

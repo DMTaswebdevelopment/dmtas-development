@@ -93,7 +93,11 @@ const OurCultureComponent: React.FC = () => {
   ];
 
   return (
-    <div ref={ourCultureRef} className="min-h-screen bg-gray-100">
+    <div
+      id="ourculture"
+      ref={ourCultureRef}
+      className="min-h-screen bg-gray-100"
+    >
       {/* Hero Section */}
       <div className="relative overflow-hidde">
         <div className="relative max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8">

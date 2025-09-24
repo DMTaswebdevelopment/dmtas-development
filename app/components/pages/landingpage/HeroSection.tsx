@@ -23,6 +23,34 @@ const HeroSection = () => {
     "https://res.cloudinary.com/dmz8tsndt/image/upload/v1731398194/samples/cloudinary-group.jpg",
   ];
 
+  // Dynamic content for each image
+  const contentData = [
+    {
+      title: "Solutions for Every Business Journey",
+      highlightWords: ["Every", "Business"],
+      description:
+        "Transform your printing and publishing processes with our state-of-the-art technology. From concept to creation, we deliver professional results that elevate your brand and exceed expectations.",
+    },
+    {
+      title: "Innovation Meets Excellence",
+      highlightWords: ["Innovation", "Excellence"],
+      description:
+        "Discover cutting-edge solutions designed to streamline your workflow and maximize efficiency. Our comprehensive platform empowers businesses to achieve remarkable results through intelligent automation.",
+    },
+    {
+      title: "Celebrate Success Together",
+      highlightWords: ["Celebrate", "Success"],
+      description:
+        "Join thousands of satisfied customers who have transformed their business operations with our innovative solutions. Experience the joy of seamless processes and exceptional outcomes.",
+    },
+    {
+      title: "Building Stronger Connections",
+      highlightWords: ["Building", "Connections"],
+      description:
+        "Foster meaningful relationships and drive collaborative growth with our comprehensive business solutions. Connect, engage, and succeed with tools designed for the modern workplace.",
+    },
+  ];
+
   // Auto-cycle images with smooth scaling transition
   useEffect(() => {
     const interval = setInterval(() => {
@@ -44,6 +72,62 @@ const HeroSection = () => {
         duration: 5,
         ease: "back.out",
       });
+    }
+  }, [currentImageIndex]);
+
+  // Animate content changes when image index changes (skip for initial load)
+  const isInitialLoad = useRef(true);
+
+  useEffect(() => {
+    // Skip animation on initial load
+    if (isInitialLoad.current) {
+      isInitialLoad.current = false;
+      return;
+    }
+
+    if (titleRef.current && paragraphRef.current && circleRef.current) {
+      // Create a timeline for content transition
+      const contentTl = gsap.timeline();
+
+      // fade out simultaneously but with their own properties
+      contentTl
+        .to(titleRef.current, {
+          opacity: 0,
+          x: -100,
+          duration: 0.4,
+          ease: "power2.in",
+        })
+        .to(
+          paragraphRef.current,
+          { opacity: 0, y: 20, duration: 0.4, ease: "power2.in" },
+          "<"
+        )
+        .to(
+          circleRef.current,
+          { scale: 0, opacity: 0, duration: 0.3, ease: "power2.in" },
+          "-=0.2"
+        )
+        // resets
+        .set(titleRef.current, { x: 200, opacity: 0 })
+        .set(paragraphRef.current, { x: 0, y: 30, opacity: 0 }) // x explicitly 0
+        .set(circleRef.current, { scale: 0, opacity: 0 })
+        // fade in
+        .to(circleRef.current, {
+          scale: 1,
+          opacity: 0.8,
+          duration: 1.5,
+          ease: "power3.out",
+        })
+        .to(
+          titleRef.current,
+          { x: 0, opacity: 1, duration: 1.2, ease: "power3.out" },
+          "-=1.0"
+        )
+        .to(
+          paragraphRef.current,
+          { y: 0, opacity: 1, duration: 0.8, ease: "power3.out" },
+          "-=0.6"
+        );
     }
   }, [currentImageIndex]);
 
@@ -122,6 +206,27 @@ const HeroSection = () => {
     };
   }, []);
 
+  // Function to render title with highlighted words
+  const renderTitle = (title: string, highlightWords: string[]) => {
+    const words = title.split(" ");
+    return words.map((word, index) => {
+      const cleanWord = word.replace(/[^\w]/g, ""); // Remove punctuation for comparison
+      const isHighlighted = highlightWords.includes(cleanWord);
+      return (
+        <span key={index}>
+          {isHighlighted ? (
+            <span className="text-[#0089CF]">{word}</span>
+          ) : (
+            word
+          )}
+          {index < words.length - 1 ? " " : ""}
+        </span>
+      );
+    });
+  };
+
+  const currentContent = contentData[currentImageIndex];
+
   return (
     <section className="h-screen relative overflow-hidden">
       {/* Background Image with Smooth Transitions */}
@@ -151,27 +256,17 @@ const HeroSection = () => {
         <div className="max-w-4xl text-white text-center px-6">
           <h1
             ref={titleRef}
-            className="text-4xl md:text-7xl font-bold mb-6 font-monserrat_bold text-white opacity-0"
+            className="text-4xl md:text-7xl font-bold mb-10 font-monserrat_bold text-white opacity-0"
           >
-            Solutions for <span className="text-[#0089CF]">Every</span>{" "}
-            <span className="text-[#0089CF]">Business</span> Journey
+            {renderTitle(currentContent.title, currentContent.highlightWords)}
           </h1>
 
           <p
             ref={paragraphRef}
             className="text-base md:text-lg leading-relaxed font-sans text-gray-50 max-w-2xl mx-auto mb-8 opacity-0"
           >
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book.
+            {currentContent.description}
           </p>
-
-          {/* <div ref={buttonRef} className="opacity-0">
-            <ButtonComponent className="relative w-1/3 text-white font-bold px-8 py-3 md:text-base hover:opacity-80 transition rounded-xl bg-[#0089CF] tracking-wide ease-in-out duration-300 font-sans flex items-center justify-center gap-3 mx-auto ">
-              Contact Us
-            </ButtonComponent>
-          </div> */}
         </div>
       </div>
 

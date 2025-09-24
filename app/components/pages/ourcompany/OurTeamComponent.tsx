@@ -95,7 +95,10 @@ const OurTeamComponent: React.FC = () => {
   }, [teamMembers.length]);
 
   return (
-    <div className="h-auto bg-gray-200/10 py-16 px-4 overflow-hidden">
+    <div
+      id="ourteam"
+      className="h-auto bg-gray-200/10 py-16 px-4 overflow-hidden"
+    >
       <div className="max-w-6xl mx-auto text-center">
         {/* Header Section */}
         <div className="mb-16">
