@@ -2,6 +2,7 @@ import { RequestData } from "../model/interface/RequestDataType";
 import { SendEmailResponseType } from "../model/types/SendEmailResponseType";
 import { postFetch } from "./function";
 
+// function to send email inquiry section (start) ============================================>
 export const sendEmail = async (
   data: RequestData
 ): Promise<SendEmailResponseType> => {
@@ -12,7 +13,9 @@ export const sendEmail = async (
     throw new Error("Error: Unable to send email");
   }
 };
+// function to send email inquiry section (end) ============================================>
 
+// function to send email service request (start) ============================================>
 export const sendServiceRequestEmail = async (
   data: RequestData
 ): Promise<SendEmailResponseType> => {
@@ -23,7 +26,9 @@ export const sendServiceRequestEmail = async (
     throw new Error("Error: Unable to send email");
   }
 };
+// function to send email service request (end) ============================================>
 
+// function to send email meter read (start) ============================================>
 export const sendMeterReadEmail = async (
   data: RequestData
 ): Promise<SendEmailResponseType> => {
@@ -34,3 +39,4 @@ export const sendMeterReadEmail = async (
     throw new Error("Error: Unable to send email");
   }
 };
+// function to send email meter read (end) ============================================>

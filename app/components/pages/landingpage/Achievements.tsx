@@ -109,7 +109,7 @@ const Achievements = () => {
             {achievementLists.map((achievementList, index) => (
               <div
                 key={achievementList.id}
-                className="achievement-item w-12 h-12 md:w-16 md:h-16 cursor-pointer"
+                className="achievement-item w-12 h-12 md:w-16 md:h-16"
               >
                 <Image
                   src={achievementList.img}
@@ -121,23 +121,6 @@ const Achievements = () => {
               </div>
             ))}
           </div>
-          {/* Second row - 2 items (fixed slice to show only 2 remaining items) */}
-          {/* <div className="flex w-full justify-between flex-wrap items-center xl:gap-32 mt-10">
-            {achievementLists.slice(4, 6).map((achievementList, index) => (
-              <div
-                key={achievementList.id}
-                className="achievement-item w-16 h-16 md:w-20 md:h-20 cursor-pointer"
-              >
-                <Image
-                  src={achievementList.img}
-                  className="w-full h-full object-contain grayscale"
-                  height={500}
-                  width={500}
-                  alt={`Achievement ${index + 5}`}
-                />
-              </div>
-            ))}
-          </div> */}
         </div>
       </div>
       {/* <hr className="absolute left-0 w-full h-[2px] bg-gray-400 " /> */}

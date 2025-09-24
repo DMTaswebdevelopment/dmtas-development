@@ -65,7 +65,7 @@ const OurCompanyComponent: React.FC = () => {
           ref={aboutUsRef}
           className="text-4xl md:text-7xl font-monserrat_bold font-bold"
         >
-          About Us
+          Our Works
         </h1>
         <Link href="/" className=" mt-5 font-sans text-base font-semibold">
           Home / About Us

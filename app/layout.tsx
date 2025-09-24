@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavigationChecker from "./components/NavigationChecker/NavigationChecker";
-import FooterChecker from "./components/NavigationChecker/FooterChecker";
+import { Providers } from "./provider";
 
 export const metadata: Metadata = {
   title: "DMTas-development",
@@ -16,9 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <NavigationChecker />
-        {children}
-        <FooterChecker />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );

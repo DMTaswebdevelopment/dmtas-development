@@ -24,7 +24,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   AlertTriangle,
   Building,
@@ -716,6 +716,41 @@ const NavigationDMTas: React.FC = () => {
     }
   };
 
+  const pathname = usePathname();
+
+  const contactUsHandler = (e: React.MouseEvent) => {
+    e.preventDefault();
+
+    if (pathname === "/") {
+      document.getElementById("inquiry-section")?.scrollIntoView({
+        behavior: "smooth",
+      });
+    } else {
+      router.push("/?scrollTo=inquiry-section");
+    }
+  };
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const scrollTo = searchParams.get("scrollTo");
+    if (scrollTo === "inquiry-section") {
+      // Small delay to ensure DOM is ready
+      const timer = setTimeout(() => {
+        document.getElementById("inquiry-section")?.scrollIntoView({
+          behavior: "smooth",
+        });
+
+        // Clean up the URL parameter after scrolling
+        const url = new URL(window.location.href);
+        url.searchParams.delete("scrollTo");
+        window.history.replaceState({}, "", url.pathname + url.search);
+      }, 100);
+
+      return () => clearTimeout(timer);
+    }
+  }, [searchParams]);
+
   return (
     <>
       <ToasterComponent
@@ -824,20 +859,22 @@ const NavigationDMTas: React.FC = () => {
                 </Link>
 
                 <Link
-                  href={"/services/contact/about"}
+                  href={"/ourworks/"}
                   onMouseEnter={blogsHover}
                   onMouseLeave={() => setIsBlogsHover(false)}
                 >
                   <div className="relative">
                     <span className="cursor-pointer hover:opacity-80">
-                      Blogs
+                      Our Works
                     </span>
                     <UnderAnimationComponent isHover={isBlogsHover} />
                   </div>
                 </Link>
 
                 <Link
-                  href="/#inquiry-section"
+                  href="/"
+                  scroll={false} // prevent default scroll
+                  onClick={contactUsHandler}
                   onMouseEnter={contactsHover}
                   onMouseLeave={() => setIsContactHover(false)}
                 >

@@ -2,25 +2,8 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-// Type definitions
-interface Division {
-  id: number;
-  name: string;
-  icon: string;
-  images: string[];
-  color: string;
-  bgImage: string;
-}
-
-interface ScrollPatternItem {
-  type: "image";
-  src: string;
-  divisionIndex: number;
-  imageIndex: number;
-  key: string;
-  cycle: number;
-}
+import { Division } from "@/app/model/interface/DivisionType";
+import { ScrollPatternItem } from "../../../model/interface/ScrollPatternItemType";
 
 const OurProducts: React.FC = () => {
   // Sample data for demonstration

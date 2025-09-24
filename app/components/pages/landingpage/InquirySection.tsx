@@ -18,15 +18,7 @@ import {
 } from "@/app/model/interface/RequestDataType";
 import ToasterComponent from "../../template/ToastMessageComponent/ToastMessageComponent";
 import LoaderComponent from "../../template/LoaderComponent/LoaderComponent";
-
-interface FormData {
-  brand: string;
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  message: string;
-}
+import { InquiryFormDataType } from "@/app/model/interface/InquiryFormDataType";
 
 const InquirySection: React.FC = () => {
   const inquiryRef = useRef<HTMLDivElement>(null);
@@ -34,13 +26,15 @@ const InquirySection: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const [showToast, setShowToast] = useState(false);
-  const [title, setTitle] = useState("");
-  const [message, setMessage] = useState("");
-  const [toastType, setToastType] = useState("");
+  // toast state (start) ===============================================>
+  const [showToast, setShowToast] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
+  const [toastType, setToastType] = useState<string>("");
+  // toast state (end) ===============================================>
 
   // Form state
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<InquiryFormDataType>({
     brand: "",
     name: "",
     company: "",
@@ -50,10 +44,10 @@ const InquirySection: React.FC = () => {
   });
 
   // Form validation errors
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<Partial<InquiryFormDataType>>({});
 
   const brands: string[] = [
-    "The Print Division Tasmania",
+    "The Print Division",
     "Acrodata",
     "Hobart Signwriters",
   ];
@@ -64,7 +58,7 @@ const InquirySection: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
 
     // Clear error for this field when user starts typing
-    if (errors[name as keyof FormData]) {
+    if (errors[name as keyof InquiryFormDataType]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
   };
@@ -93,7 +87,7 @@ const InquirySection: React.FC = () => {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: Partial<InquiryFormDataType> = {};
 
     if (!formData.brand) newErrors.brand = "Please select a brand";
     if (!formData.name.trim()) newErrors.name = "Name is required";

@@ -242,13 +242,8 @@ const missionLists: MissionListItem[] = [
 const socialLinks = [
   {
     icon: Facebook,
-    link: "https://www.facebook.com/DMTas.2021",
+    link: "https://www.facebook.com/Document.Management.Tasmania/",
     label: "Facebook",
-  },
-  {
-    icon: Instagram,
-    link: "https://www.instagram.com/dmtas.2021/",
-    label: "Instagram",
   },
   {
     icon: Linkedin,
@@ -259,6 +254,11 @@ const socialLinks = [
     icon: Youtube,
     link: "https://www.youtube.com/channel/UCe9YGPz1bQerzhmw_kbhjBw",
     label: "YouTube",
+  },
+  {
+    icon: Instagram,
+    link: "https://www.instagram.com/document_management_tasmania/",
+    label: "Instagram",
   },
 ];
 
