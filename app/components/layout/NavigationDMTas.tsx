@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import Rectangle157 from "@/public/Rectangle157.png";
@@ -59,6 +59,20 @@ import ToasterComponent from "../template/ToastMessageComponent/ToastMessageComp
 import LoaderComponent from "../template/LoaderComponent/LoaderComponent";
 
 // Define interfaces for better type safety
+
+// Separate component that uses useSearchParams
+const SearchParamsHandler: React.FC<{
+  onScrollTo: (scrollTo: string | null) => void;
+}> = ({ onScrollTo }) => {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const scrollTo = searchParams.get("scrollTo");
+    onScrollTo(scrollTo);
+  }, [searchParams, onScrollTo]);
+
+  return null;
+};
 
 const NavigationDMTas: React.FC = () => {
   const width = useWidthHook();
@@ -730,10 +744,7 @@ const NavigationDMTas: React.FC = () => {
     }
   };
 
-  const searchParams = useSearchParams();
-
-  useEffect(() => {
-    const scrollTo = searchParams.get("scrollTo");
+  const handleScrollTo = (scrollTo: string | null) => {
     if (scrollTo === "inquiry-section") {
       // Small delay to ensure DOM is ready
       const timer = setTimeout(() => {
@@ -749,10 +760,14 @@ const NavigationDMTas: React.FC = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [searchParams]);
+  };
 
   return (
     <>
+      <Suspense fallback={<div />}>
+        <SearchParamsHandler onScrollTo={handleScrollTo} />
+      </Suspense>
+
       <ToasterComponent
         isOpen={showToast}
         title={title}
