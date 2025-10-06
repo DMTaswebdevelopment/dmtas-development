@@ -33,19 +33,19 @@ const HeroSection = () => {
     },
     {
       title: "Innovation Meets Excellence",
-      highlightWords: ["Innovation", "Excellence"],
+      highlightWords: ["", "Meets"],
       description:
         "Discover cutting-edge solutions designed to streamline your workflow and maximize efficiency. Our comprehensive platform empowers businesses to achieve remarkable results through intelligent automation.",
     },
     {
       title: "Celebrate Success Together",
-      highlightWords: ["Celebrate", "Success"],
+      highlightWords: ["", "Success"],
       description:
         "Join thousands of satisfied customers who have transformed their business operations with our innovative solutions. Experience the joy of seamless processes and exceptional outcomes.",
     },
     {
       title: "Building Stronger Connections",
-      highlightWords: ["Building", "Connections"],
+      highlightWords: ["", "Stronger"],
       description:
         "Foster meaningful relationships and drive collaborative growth with our comprehensive business solutions. Connect, engage, and succeed with tools designed for the modern workplace.",
     },

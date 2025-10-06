@@ -25,3 +25,8 @@ export interface RequestData {
   formValues: UserDetails;
   parsedData: ParsedData;
 }
+
+export interface SignupData {
+  login_id: string;
+  password: string;
+}

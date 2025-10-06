@@ -15,7 +15,7 @@ const ModalComponent: React.FC<Props> = (props) => {
     <Transition.Root show={props.isOpen} as={Fragment}>
       <Dialog
         as="div"
-        className="relative z-50"
+        className="relative z-50 bg-red-400"
         onClose={() => {}}
         onClick={props.onCloseHandler}
       >

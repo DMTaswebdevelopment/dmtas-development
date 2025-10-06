@@ -7,6 +7,8 @@ const initialState: StorageStatesModel = {
     path: "",
     message: "",
   },
+  modalOpenState: false,
+  selectedMenu: "Service Request",
 };
 
 export const storageSlice = createSlice({
@@ -24,12 +26,23 @@ export const storageSlice = createSlice({
     ) => {
       state.sessionData = action.payload;
     },
+    setModalOpenState: (state, action: PayloadAction<boolean>) => {
+      state.modalOpenState = action.payload;
+    },
+    setSelectedMenu: (state, action: PayloadAction<string>) => {
+      state.selectedMenu = action.payload;
+    },
   },
 });
 
-export const { setSessionData } = storageSlice.actions;
+export const { setSessionData, setModalOpenState, setSelectedMenu } =
+  storageSlice.actions;
 
 export const getSessionData = (state: RootState) =>
   state.reduxStorage.sessionData;
+export const getModalOpenState = (state: RootState) =>
+  state.reduxStorage.modalOpenState;
+export const getSelectedMenu = (state: RootState) =>
+  state.reduxStorage.selectedMenu;
 
 export default storageSlice.reducer;

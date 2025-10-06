@@ -4,6 +4,13 @@
 @theme {
   --font-montserrat_regular: "montserrat-regular", sans-serif;
   --font-montserrat_bold: "montserrat-bold", sans-serif;
+
+  /* 🎨 Custom colors */
+  /* digital printn color (start) ====================================> */
+  --color-digital-print-1: #f17e06;
+  --color-digital-print-2: #ec5c11;
+  --color-digital-print-3: #f59b00;
+  /* digital printn color (end) ====================================> */
 }
 
 @font-face {

@@ -3,5 +3,10 @@ export default function ProdcutsLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="h-screen">{children}</div>;
+  return (
+    <div className="">
+      {/* Content section that follows the image */}
+      {children}
+    </div>
+  );
 }

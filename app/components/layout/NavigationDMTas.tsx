@@ -9,11 +9,7 @@ import Rectangle157 from "@/public/Rectangle157.png";
 //zustand
 import { event } from "@/app/lib/fpixel";
 
-//hook
-
 //DMTas Logo
-// import DMTasLogo from "@/public/dmtas_assets/DMTas_Horizontal_Colour.svg";
-// import DMTasLogoWhite from "@/public/dmtas_assets/DMTas_Horizontal_Mono_Reverse.svg";
 import DMTasLogoShield from "@/public/dmtas_assets/DMTas_Logomark_Colour.svg";
 import DMTasLogoWhiteShield from "@/public/dmtas_assets/DMTas_Logomark_Mono_Reverse.svg";
 
@@ -57,6 +53,17 @@ import {
 import { FormData } from "@/app/model/interface/FormDataType";
 import ToasterComponent from "../template/ToastMessageComponent/ToastMessageComponent";
 import LoaderComponent from "../template/LoaderComponent/LoaderComponent";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getModalOpenState,
+  getSelectedMenu,
+  setModalOpenState,
+  setSelectedMenu,
+} from "@/redux/storageSlice";
+
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
+import { useUser } from "@/app/context/authContext";
 
 // Define interfaces for better type safety
 
@@ -75,8 +82,30 @@ const SearchParamsHandler: React.FC<{
 };
 
 const NavigationDMTas: React.FC = () => {
+  const { isLoggedIn } = useUser();
+
+  // const _token = getTokenFromLocalStorage() ?? "";
+  // let userData: TokenModel | null = null;
+
+  // if (_token) {
+  //   try {
+  //     userData = jwtDecode<TokenModel>(_token);
+  //     console.log("Decoded userData:", userData);
+  //   } catch (err) {
+  //     console.error("Invalid token:", err);
+  //     userData = null; // fallback
+  //   }
+  // } else {
+  //   console.log("No token found in localStorage");
+  // }
+
   const width = useWidthHook();
   const router = useRouter();
+  const dispatch = useDispatch();
+  // const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const isModalOpen = useSelector(getModalOpenState);
+  const selectedMenu = useSelector(getSelectedMenu);
+
   const navRef = useRef<HTMLDivElement>(null);
   const formContainerRef = useRef<HTMLDivElement>(null);
   const serviceFieldsRef = useRef<HTMLDivElement>(null);
@@ -94,6 +123,11 @@ const NavigationDMTas: React.FC = () => {
   const [isBlogsHover, setIsBlogsHover] = useState<boolean>(false);
   const [hoverServices, setHoverServices] = useState<string>(
     "Multifunction Printers"
+  );
+
+  // read the current modal state from redux
+  const modalOpenState = useAppSelector(
+    (state: RootState) => state.reduxStorage.modalOpenState
   );
 
   const [showToast, setShowToast] = useState<boolean>(false);
@@ -136,8 +170,6 @@ const NavigationDMTas: React.FC = () => {
   // send email service request (start) ============================================================>
 
   const [isMenuClicked, setIsMenuClicked] = useState<boolean>(false); // Track click state
-
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   // modal (start) =================================================>
   const [isSupportModalOpen, setIsSupportModalOpen] = useState<boolean>(false);
@@ -293,10 +325,12 @@ const NavigationDMTas: React.FC = () => {
 
   const [menuLists, setMenuLists] =
     useState<HardwareSupportMenuItem>("Service Request");
-  const [selectedMenu, setSelectedMenu] = useState<string>("Service Request");
+  // const [selectedMenu, setSelectedMenu] = useState<string>("Service Request");
 
   const handleClick = (): void => {
-    setIsModalOpen((prev) => !prev);
+    // setIsModalOpen((prev) => !prev);
+    dispatch(setModalOpenState(!modalOpenState)); // toggle
+
     // router.push("/support"); // Navigate to "/support"
     // event("Hardware Support", {
     //   info: "User's clicked the button Hardware Support",
@@ -376,15 +410,17 @@ const NavigationDMTas: React.FC = () => {
           switch (item) {
             case "Service Request":
               setMenuLists("Service Request");
-              setSelectedMenu("Service Request");
+              dispatch(setSelectedMenu("Service Request"));
+              // setSelectedMenu("Service Request");
               break;
             case "Meter Read":
               setMenuLists("Meter Read");
-              setSelectedMenu("Meter Read");
+              dispatch(setSelectedMenu("Meter Read"));
+
               break;
             case "Remote Support":
               setMenuLists("Remote Support");
-              setSelectedMenu("Remote Support");
+              dispatch(setSelectedMenu("Remove Support"));
               break;
             case "Drivers and Support":
               break;
@@ -435,15 +471,16 @@ const NavigationDMTas: React.FC = () => {
       switch (item) {
         case "Service Request":
           setMenuLists("Service Request");
-          setSelectedMenu("Service Request");
+          dispatch(setSelectedMenu("Service Request"));
           break;
         case "Meter Read":
           setMenuLists("Meter Read");
-          setSelectedMenu("Meter Read");
+          dispatch(setSelectedMenu("Meter Read"));
+
           break;
         case "Remote Support":
           setMenuLists("Remote Support");
-          setSelectedMenu("Remote Support");
+          dispatch(setSelectedMenu("Remove Support"));
           break;
         case "Drivers and Support":
           break;
@@ -460,10 +497,14 @@ const NavigationDMTas: React.FC = () => {
   };
 
   const handlePuzzleClick = (): void => {
-    router.push("/puzzle/login"); // Navigate to "/support"
-    event("Hardware Support", {
-      info: "User's clicked the button Hardware Support",
-    });
+    if (!isLoggedIn) {
+      router.push("/puzzle/login"); // Navigate to "/support"
+      event("Variety Puzzle", {
+        info: "User's clicked the button Hardware Support",
+      });
+    } else {
+      router.push("/puzzle/variety"); // Navigate to "/support"
+    }
   };
 
   const validateForm = (): boolean => {
@@ -1315,7 +1356,10 @@ const NavigationDMTas: React.FC = () => {
 
       <ModalComponent
         isOpen={isModalOpen}
-        onCloseHandler={() => setIsModalOpen(false)}
+        onCloseHandler={() => {
+          // setIsModalOpen(false);
+          dispatch(setModalOpenState(!modalOpenState));
+        }}
         header={
           <div className="relative flex-1 mb-5">
             <button

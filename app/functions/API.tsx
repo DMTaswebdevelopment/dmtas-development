@@ -1,4 +1,5 @@
-import { RequestData } from "../model/interface/RequestDataType";
+import { LoginResponseType } from "../model/interface/LoginResponseType";
+import { RequestData, SignupData } from "../model/interface/RequestDataType";
 import { SendEmailResponseType } from "../model/types/SendEmailResponseType";
 import { postFetch } from "./function";
 
@@ -38,5 +39,34 @@ export const sendMeterReadEmail = async (
   } catch {
     throw new Error("Error: Unable to send email");
   }
+};
+// function to send email meter read (end) ============================================>
+
+// function to send email meter read (start) ============================================>
+export const createVarietyPuzzleAccount = async (
+  data: SignupData
+): Promise<SendEmailResponseType> => {
+  try {
+    const response = await postFetch("/api/auth/variety/signup", data);
+    return response;
+  } catch {
+    throw new Error("Error: Unable to send email");
+  }
+};
+// function to send email meter read (end) ============================================>
+
+// function to send email meter read (start) ============================================>
+export const loginVarietyPuzzleAccount = (
+  data: SignupData
+): Promise<LoginResponseType> => {
+  return new Promise((resolve, reject) => {
+    postFetch("/api/auth/variety/login", data)
+      .then((res) => {
+        resolve(res);
+      })
+      .catch(() => {
+        reject("Error: Something went wrong while logging in!");
+      });
+  });
 };
 // function to send email meter read (end) ============================================>

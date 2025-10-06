@@ -14,11 +14,21 @@ import iso27001 from "@/public/ISO27001_Logo.svg";
 import useWidthHook from "@/app/hooks/useWidthHooks";
 import { footerLinks, socialLinks } from "@/app/constants";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { setModalOpenState, setSelectedMenu } from "@/redux/storageSlice";
+import { useAppSelector } from "@/redux/hooks";
+import { RootState } from "@/redux/store";
 
 const FooterDMTas = () => {
+  const dispatch = useDispatch();
   const router = useRouter(); // Added router initialization
   const width = useWidthHook();
   const [openSections, setOpenSections] = useState<Record<number, boolean>>({});
+
+  // read the current modal state from redux
+  const modalOpenState = useAppSelector(
+    (state: RootState) => state.reduxStorage.modalOpenState
+  );
 
   const toggleSection = (index: number) => {
     setOpenSections((prev) => ({
@@ -29,10 +39,20 @@ const FooterDMTas = () => {
 
   const handleClick = (
     e: React.MouseEvent<HTMLAnchorElement>,
-    href: string
+    href: string,
+    name: string,
+    title: string
   ) => {
-    // Only intercept hash links
-    if (href.startsWith("#")) {
+    alert(`ni ari ko goyyyysssss`);
+    // Only intercept
+    // hash links
+    if (title === "Hardware Support") {
+      // Prevent the default link navigation
+      e.preventDefault();
+      e.stopPropagation();
+
+      dispatch(setSelectedMenu(name));
+    } else if (href.startsWith("#")) {
       e.preventDefault();
       const id = href.replace("#", "");
       const el = document.getElementById(id);
@@ -42,6 +62,16 @@ const FooterDMTas = () => {
         // Remove hash from URL, stay on /ourcompany
         router.replace("/ourcompany", { scroll: false });
       }
+    }
+  };
+
+  const hardwareSupportHandler = (name: string, links: string) => {
+    if (name !== "Driver and Support") {
+      dispatch(setSelectedMenu(name));
+      dispatch(setModalOpenState(!modalOpenState)); // toggle
+    } else {
+      // Open the link in a new tab for "Drivers and Support"
+      window.open(links, "_blank", "noopener,noreferrer");
     }
   };
 
@@ -99,21 +129,36 @@ const FooterDMTas = () => {
                 {section.subTitle.map((item, i) => (
                   <li key={i}>
                     {item.links ? (
-                      <Link
-                        href={item.links}
-                        onClick={(e) => handleClick(e, item.links)} // Added handleClick
-                        className="text-gray-300 text-sm font-normal hover:text-white hover:underline font-aktiv tracking-wide transition-colors"
-                        target={
-                          item.links.startsWith("http") ? "_blank" : "_self"
-                        }
-                        rel={
-                          item.links.startsWith("http")
-                            ? "noopener noreferrer"
-                            : ""
-                        }
-                      >
-                        {item.name}
-                      </Link>
+                      section.title === "Hardware Support" ? (
+                        // Render as button instead of Link for Hardware Support
+                        <button
+                          onClick={() =>
+                            hardwareSupportHandler(item.name, item.links)
+                          }
+                          className="text-gray-300 text-sm font-normal hover:text-white hover:underline font-aktiv tracking-wide transition-colors text-left"
+                        >
+                          {item.name}
+                        </button>
+                      ) : (
+                        // Regular Link for other items
+                        <Link
+                          href={item.links}
+                          onClick={(e) =>
+                            handleClick(e, item.links, section.title, item.name)
+                          }
+                          className="text-gray-300 text-sm font-normal hover:text-white hover:underline font-aktiv tracking-wide transition-colors"
+                          target={
+                            item.links.startsWith("http") ? "_blank" : "_self"
+                          }
+                          rel={
+                            item.links.startsWith("http")
+                              ? "noopener noreferrer"
+                              : ""
+                          }
+                        >
+                          {item.name}
+                        </Link>
+                      )
                     ) : (
                       <span className="text-gray-300 text-sm font-normal font-aktiv tracking-wide">
                         {item.name}
@@ -283,22 +328,46 @@ const FooterDMTas = () => {
                     {section.subTitle.map((item, i) => (
                       <li key={i}>
                         {item.links ? (
-                          <Link
-                            href={item.links}
-                            className="text-white text-sm font-normal block hover:text-gray-300 transition-colors"
-                            target={
-                              item.links.startsWith("http") ? "_blank" : "_self"
-                            }
-                            rel={
-                              item.links.startsWith("http")
-                                ? "noopener noreferrer"
-                                : ""
-                            }
-                          >
-                            {item.name}
-                          </Link>
+                          section.title === "Hardware Support" ? (
+                            // Render as button instead of Link for Hardware Support
+                            <button
+                              onClick={
+                                () => alert(`mao ni ang na click`)
+                                // dispatch(setSelectedMenu(item.name))
+                              }
+                              className="text-gray-300 text-sm font-normal hover:text-white hover:underline font-aktiv tracking-wide transition-colors text-left"
+                            >
+                              {item.name}
+                            </button>
+                          ) : (
+                            // Regular Link for other items
+                            <Link
+                              href={item.links}
+                              onClick={(e) =>
+                                handleClick(
+                                  e,
+                                  item.links,
+                                  section.title,
+                                  item.name
+                                )
+                              }
+                              className="text-gray-300 text-sm font-normal hover:text-white hover:underline font-aktiv tracking-wide transition-colors"
+                              target={
+                                item.links.startsWith("http")
+                                  ? "_blank"
+                                  : "_self"
+                              }
+                              rel={
+                                item.links.startsWith("http")
+                                  ? "noopener noreferrer"
+                                  : ""
+                              }
+                            >
+                              {item.name}
+                            </Link>
+                          )
                         ) : (
-                          <span className="text-white text-sm font-normal block">
+                          <span className="text-gray-300 text-sm font-normal font-aktiv tracking-wide">
                             {item.name}
                           </span>
                         )}

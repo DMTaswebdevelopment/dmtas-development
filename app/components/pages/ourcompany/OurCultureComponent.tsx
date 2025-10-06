@@ -85,9 +85,7 @@ const OurCultureComponent: React.FC = () => {
     {
       icon: <Users className="w-8 h-8" />,
       title: "Our Team Philosophy",
-      description: `What makes us different is the way we bring people and innovation together. Our team is a blend of deep industry experience and fresh perspectives. We value curiosity as much as expertise, encouraging our people to keep asking "why", "what if" and "how else.". That mindset allows us to adapt quickly, explore new
-                technologies, and create smarter ways for ourselves and our
-                clients to work.`,
+      description: `A combination of seasoned expertise with fresh perspectives, fostering a culture of curiosity that drive us to create innovative solutions and adapt to new technologies for ourselves and our clients.`,
       color: "from-purple-500 to-violet-600",
     },
   ];

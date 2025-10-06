@@ -51,6 +51,7 @@ const InquirySection: React.FC = () => {
     "Acrodata",
     "Hobart Signwriters",
   ];
+
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ): void => {

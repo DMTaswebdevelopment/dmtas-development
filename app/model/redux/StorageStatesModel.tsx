@@ -3,4 +3,6 @@ export interface StorageStatesModel {
     path: string;
     message: string;
   };
+  modalOpenState: boolean;
+  selectedMenu: string;
 }

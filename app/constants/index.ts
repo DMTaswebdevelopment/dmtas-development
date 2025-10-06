@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { StaticImageData } from "next/image";
 import { ProductsMenuItem } from "../model/interface/ProductionsMenuItemType";
+import { TeamBrandsMember } from "../model/interface/TeamBrandsMember";
 
 // Type definitions
 interface DataItem {
@@ -111,7 +112,7 @@ const data: DataItem[] = [
 const productsMenu: ProductsMenuItem[] = [
   {
     id: 3,
-    Header: "The Print Division Tasmania",
+    Header: "The Print Division",
     subMenu: [
       {
         Header: "About Digital Print",
@@ -197,7 +198,7 @@ const cardLists: CardListItem[] = [
     id: 0,
     img_url:
       "https://res.cloudinary.com/dmz8tsndt/image/upload/v1756789489/TPD_Colour_vuaww0.svg",
-    bg: "bg-[#EEFF00]",
+    bg: "bg-[#F58220]",
     description:
       "Through a unique combination of construction and design disciplines expertise, Concor and delivers world class",
     icon: Printer,
@@ -208,7 +209,7 @@ const cardLists: CardListItem[] = [
     id: 1,
     img_url:
       "https://res.cloudinary.com/dmz8tsndt/image/upload/v1756945661/Acrodata_Colour_wd3yn5.svg",
-    bg: "bg-[#F3070B]",
+    bg: "bg-[#EE1D23]",
     button_text: "Learn More",
     description:
       "Through a unique combination of construction and design disciplines expertise, Concor and delivers world class",
@@ -221,7 +222,7 @@ const cardLists: CardListItem[] = [
     description:
       "Through a unique combination of construction and design disciplines expertise, Concor and delivers world class",
     button_text: "Shop Now",
-    bg: "bg-[#00D928]",
+    bg: "bg-[#6CBD45]",
     alt: "hobart",
   },
 ];
@@ -306,15 +307,15 @@ const footerLinks = [
     subTitle: [
       {
         name: "Service Request",
-        links: "/support/serviceRequest",
+        links: "Service Request",
       },
       {
         name: "Meter Read",
-        links: "/support/meterRead",
+        links: "Meter Read",
       },
       {
         name: "Remote Support",
-        links: "/support/remoteSupport",
+        links: "Remote Support",
       },
       {
         name: "Driver and Support",
@@ -360,6 +361,288 @@ const footerLinks = [
   },
 ];
 
+const teamMembers: TeamBrandsMember[] = [
+  {
+    title: "Document Management Tasmania",
+    teams: [
+      {
+        name: "Keirran Downham",
+        role: "Managing Director",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Roger Hurd",
+        role: "Group General Manager",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Michael Wilson",
+        role: "Account Manager",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Andrew Hart",
+        role: "Account Manager",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Darryl Hurd",
+        role: "Account Manager",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "John Hannigan",
+        role: "Account Manager (G.E.M)",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Kevin Dowling",
+        role: "Service Manager",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Patrick Parham",
+        role: "2IC Service",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Dech de Chaza",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Liam Hogwood",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Lloyd Wilday",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Dech de Chaza",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Daniel King",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Jack Richards",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Jake Reid",
+        role: "Service Team (IT)",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Lester Aika",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Nathan Croucher",
+        role: "Vale",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Ralph McGee",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Sam Reimer",
+        role: "Service Team",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Colin Webber",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Susan Downham",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Cassie Cox",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Sonja Trueman",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Stacey Blowfield",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Ana Delima",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Grant McDermott",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Janmarch Rubio",
+        role: "Web Developer",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Madel Jalando-on",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Sophie Latonio",
+        role: "Operations",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Eugene Rayan",
+        role: "Marketing Manager",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+    ],
+  },
+  {
+    title: "The Print Division",
+    teams: [
+      {
+        name: "Whitney Francis",
+        role: "Print Manager",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Allan Jeffrey",
+        role: "(Launceston)",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "A’Tania Rowley-Langdo",
+        role: "Front of House (Hobart)",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Dillion Farre",
+        role: "Prepress",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Josh Wilson",
+        role: "Graphic Artist",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Leanne Holmes",
+        role: "Production Manager",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Lora Owen",
+        role: "Print Apprentice",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Maria Smith",
+        role: "Graphic Artist",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Shana Clark-Brown",
+        role: "Front of House (Launceston)",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Paul Nash",
+        role: "BDM",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+    ],
+  },
+  {
+    title: "Acrodata",
+    teams: [
+      {
+        name: "Alex Bannister",
+        role: "Team Leader",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Hamish Hibberd",
+        role: "",
+        image:
+          "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Charlotte Downham",
+        role: "Front of House (Hobart)",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+      {
+        name: "Zack Mansfield -",
+        role: "Prepress",
+        image:
+          "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+      },
+    ],
+  },
+];
+
 export {
   data,
   productsMenu,
@@ -367,6 +650,7 @@ export {
   missionLists,
   socialLinks,
   footerLinks,
+  teamMembers,
 };
 
 // Export types for use in other components

@@ -1,11 +1,39 @@
 "use client";
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import { getTokenFromLocalStorage } from "@/app/functions/function";
+import { TokenModel } from "@/app/model/interface/TokenModel";
+import { jwtDecode } from "jwt-decode";
 const VarietyNavigation = () => {
+  const _token = getTokenFromLocalStorage() ?? "";
+  const [backgroundColor, setBackgroundColor] = useState("");
+
+  console.log("backgroundColor", backgroundColor);
+  let userData: TokenModel | null = null;
+
+  useEffect(() => {
+    if (_token) {
+      try {
+        userData = jwtDecode<TokenModel>(_token);
+        console.log("Decoded userDataasdf:", userData);
+
+        if (userData.claims.login_id === "DMTAS") {
+          setBackgroundColor("bg-[#0089CF]");
+        }
+      } catch (err) {
+        console.error("Invalid token:", err);
+        userData = null; // fallback
+      }
+    } else {
+      console.log("No token found in localStorage");
+    }
+  }, [_token]);
+
   return (
-    <div>
-      <div className=""></div>
-    </div>
+    <nav
+      className={`nav-bar ${backgroundColor} relative w-full z-20 font-montserrat flex px-10 items-center justify-between  min-h-14  4K:h-52 py-2`}
+    >
+      <div className="">Testing</div>
+    </nav>
   );
 };
 
