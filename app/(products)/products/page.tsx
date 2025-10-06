@@ -15,7 +15,6 @@ import Apeos_C7071 from "@/public/products/Apeos_C7071-1-removebg-preview.png";
 import ModalComponent from "@/app/components/template/ModalComponent/ModalComponent";
 
 const Products = () => {
-  const [viewMode, setViewMode] = useState("grid");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   interface DetailsModel {
     full_description: string;
@@ -263,7 +262,6 @@ const Products = () => {
     label: string;
     value: string | React.ReactNode;
   }
-  console.log("selectedProduct", selectedProduct);
   // ✅ FIX: accept a single product, not an array
   const showDetailsHandler = (product: ProductsType) => {
     console.log("product", product);
@@ -300,7 +298,8 @@ const Products = () => {
                 Our Products
               </h1>
               <p className="text-sm md:text-xl opacity-90 drop-shadow-md">
-                Tasmania's largest provider of digital multifunction <br />
+                Tasmania&lsquo;s largest provider of digital multifunction{" "}
+                <br />
                 solutions
               </p>
             </div>
@@ -312,11 +311,7 @@ const Products = () => {
             {/* Products Grid */}
             <div className="flex-1">
               <div
-                className={`grid gap-8 ${
-                  viewMode === "grid"
-                    ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4"
-                    : "grid-cols-1"
-                }`}
+                className={`grid gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4`}
               >
                 {products.map((product, index) => (
                   <div

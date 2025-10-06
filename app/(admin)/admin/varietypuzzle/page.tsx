@@ -1,16 +1,9 @@
 "use client";
 
-import { auth, db } from "@/app/lib/firebase";
+import { db } from "@/app/lib/firebase";
 import DMTasLogoShield from "@/public/dmtas_assets/DMTas_Logomark_Colour.svg";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import {
-  collection,
-  doc,
-  getDocs,
-  query,
-  setDoc,
-  where,
-} from "firebase/firestore";
+
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { Lock, UserCircle } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -125,7 +118,7 @@ const VarietyPuzzle = () => {
 
       // You can redirect to login page here
       // router.push('/login');
-    } catch (error: any) {
+    } catch (error) {
       console.error("Account creation failed:", error);
       alert("Failed to create account. Please try again.");
     } finally {

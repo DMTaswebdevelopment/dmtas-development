@@ -7,14 +7,12 @@ const VarietyNavigation = () => {
   const _token = getTokenFromLocalStorage() ?? "";
   const [backgroundColor, setBackgroundColor] = useState("");
 
-  console.log("backgroundColor", backgroundColor);
   let userData: TokenModel | null = null;
 
   useEffect(() => {
     if (_token) {
       try {
         userData = jwtDecode<TokenModel>(_token);
-        console.log("Decoded userDataasdf:", userData);
 
         if (userData.claims.login_id === "DMTAS") {
           setBackgroundColor("bg-[#0089CF]");

@@ -11,7 +11,6 @@ import {
   RequestData,
   UserDetails,
 } from "@/app/model/interface/RequestDataType";
-import ServiceRequestTemplateComponent from "@/app/components/template/ServiceRequestTemplateComponent/ServiceRequestTemplateComponent";
 import MeterRead from "@/app/components/template/MeterReadComponent/MeterReadComponent";
 
 config();

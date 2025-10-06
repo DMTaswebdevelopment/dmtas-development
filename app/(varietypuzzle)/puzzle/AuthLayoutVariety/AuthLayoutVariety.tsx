@@ -1,8 +1,8 @@
 "use client";
 
 import { useAdminAuth } from "@/app/auth/authVariety";
-import RedirectComponent from "@/app/components/routes/RedirectComponent/RedirectComponent";
-import FullPageLoaderComp from "@/app/components/ui/FullPageLoaderComp/FullPageLoaderComp";
+// import RedirectComponent from "@/app/components/routes/RedirectComponent/RedirectComponent";
+// import FullPageLoaderComp from "@/app/components/ui/FullPageLoaderComp/FullPageLoaderComp";
 
 interface AuthLayoutVarietyProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ interface AuthLayoutVarietyProps {
 export default function AuthLayoutVariety({
   children,
 }: AuthLayoutVarietyProps) {
-  const { isLoggedIn, isLoading } = useAdminAuth();
+  const { isLoggedIn } = useAdminAuth();
 
   console.log("isUserLogin", isLoggedIn);
 

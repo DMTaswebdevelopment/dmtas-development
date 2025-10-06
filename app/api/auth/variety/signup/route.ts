@@ -5,9 +5,14 @@ import bcrypt from "bcryptjs";
 import { adminAuth, adminDb } from "@/app/lib/firebase-admin";
 import { v4 as uuidv4 } from "uuid";
 
+interface SignupRequestBody {
+  login_id: string;
+  password: string;
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { login_id, password } = await request.json();
+    const { login_id, password }: SignupRequestBody = await request.json();
 
     // Validation
     if (!login_id || !password) {
@@ -63,15 +68,15 @@ export async function POST(request: NextRequest) {
 
     // Create Firebase user with email format
     const email = `${normalizedLoginId}@dmtas.variety.com.au`;
-    let firebaseUser;
 
+    let firebaseUser;
     try {
       firebaseUser = await adminAuth.createUser({
-        email: email,
-        password: password,
+        email,
+        password,
       });
-    } catch (firebaseError: any) {
-      if (firebaseError.code === "auth/email-already-exists") {
+    } catch (error) {
+      if (error) {
         return NextResponse.json(
           {
             success: false,
@@ -81,7 +86,7 @@ export async function POST(request: NextRequest) {
           { status: 409 }
         );
       }
-      throw firebaseError;
+      throw error;
     }
 
     // Hash the password
@@ -90,16 +95,16 @@ export async function POST(request: NextRequest) {
     // Generate unique user ID
     const userId = uuidv4();
 
-    // Create user document to match your login structure
+    // Define user data type
     const userData = {
       uid: userId,
       firebase_uid: firebaseUser.uid,
       login_id: normalizedLoginId,
-      email: email,
+      email,
       password: hashedPassword,
       status: "active",
       created_at: new Date(),
-      last_login: null,
+      last_login: null as Date | null,
       login_count: 0,
       is_active: true,
     };
@@ -116,11 +121,8 @@ export async function POST(request: NextRequest) {
         user_id: userData.uid,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Signup error:", error);
-
-    // Clean up Firebase user if it was created but Firestore failed
-    // You might want to implement this cleanup logic
 
     return NextResponse.json(
       {

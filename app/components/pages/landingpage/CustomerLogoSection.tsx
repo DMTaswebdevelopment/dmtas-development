@@ -78,7 +78,6 @@ const CustomerLogosSection: React.FC = () => {
       if (!scrollerRef.current || !containerRef.current) return;
 
       const scroller = scrollerRef.current;
-      const container = containerRef.current;
 
       // Function to initialize the animation
       const initAnimation = () => {
