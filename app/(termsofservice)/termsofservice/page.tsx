@@ -5,19 +5,13 @@ import {
   Shield,
   FileText,
   AlertCircle,
-  Users,
   Lock,
   Scale,
-  FileCheck,
-  XCircle,
   ChevronDown,
-  BookOpen,
-  Clock,
   CheckCircle,
   ArrowRight,
   Sparkles,
   Info,
-  Eye,
   Zap,
   Globe,
   CreditCard,
@@ -26,10 +20,23 @@ import {
 } from "lucide-react";
 
 const TermsOfServicePage = () => {
-  const [expandedSection, setExpandedSection] = useState(null);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
   const [readSections, setReadSections] = useState(new Set());
 
-  const sections = [
+  interface Section {
+    id: string;
+    title: string;
+    icon: React.ReactNode;
+    color: string;
+    lightBg: string;
+    accentColor: string;
+    borderAccent: string;
+    summary: string;
+    highlights: string[];
+    content: string[];
+  }
+
+  const sections: Section[] = [
     {
       id: "accuracy",
       title: "Accuracy & Information",
@@ -190,14 +197,12 @@ const TermsOfServicePage = () => {
     },
   ];
 
-  const toggleSection = (sectionId: any) => {
+  const toggleSection = (sectionId: string) => {
     setExpandedSection(expandedSection === sectionId ? null : sectionId);
     if (!readSections.has(sectionId)) {
       setReadSections(new Set([...readSections, sectionId]));
     }
   };
-
-  const progressPercentage = (readSections.size / sections.length) * 100;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -300,7 +305,7 @@ const TermsOfServicePage = () => {
         <div className="grid gap-4 md:gap-5">
           {sections.map((section, index) => (
             <div
-              key={section.id}
+              key={index}
               className={`group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 overflow-hidden border-2 ${
                 expandedSection === section.id
                   ? "border-blue-200 shadow-2xl"

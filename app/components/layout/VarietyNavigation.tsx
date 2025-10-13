@@ -24,7 +24,7 @@ const VarietyNavigation = () => {
     } else {
       console.log("No token found in localStorage");
     }
-  }, [_token]);
+  }, [_token, userData]);
 
   return (
     <nav

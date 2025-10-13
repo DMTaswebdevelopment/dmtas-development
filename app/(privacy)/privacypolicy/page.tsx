@@ -72,7 +72,7 @@ const PrivacyPage = () => {
           This Privacy Policy describes how your personal information is
           collected, used, and shared when you visit or make a purchase from{" "}
           <span className="font-semibold text-blue-600">www.dmtas.com.au</span>{" "}
-          (the "Site").
+          (the &ldquo;Site&rdquo;).
         </p>
 
         {/* Policy Sections */}
