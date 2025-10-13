@@ -5,5 +5,4 @@ export interface Division {
   icon: string;
   images: string[];
   color: string;
-  bgImage: string;
 }

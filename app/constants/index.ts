@@ -347,11 +347,11 @@ const footerLinks = [
     subTitle: [
       {
         name: "Privacy Policy",
-        links: "/support/privacyPolicy",
+        links: "/privacypolicy",
       },
       {
         name: "Terms of Service",
-        links: "/support/termsOfService",
+        links: "/termsofservice",
       },
       {
         name: "ABN: 52 629 796 103",

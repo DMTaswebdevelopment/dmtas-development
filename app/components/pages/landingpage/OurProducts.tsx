@@ -10,7 +10,7 @@ const OurProducts: React.FC = () => {
   const divisions: Division[] = [
     {
       id: 1,
-      name: "Web Development",
+      name: "The Print Division",
       icon: "https://res.cloudinary.com/dmz8tsndt/image/upload/v1756948279/TPD_Colour_vy9wqa.svg",
 
       images: [
@@ -19,11 +19,10 @@ const OurProducts: React.FC = () => {
         "https://res.cloudinary.com/dmz8tsndt/image/upload/v1739511758/Rectangle106_k5oe5a.png",
       ],
       color: "#3B82F6",
-      bgImage: "",
     },
     {
       id: 2,
-      name: "Mobile Apps",
+      name: "Acrodata",
       icon: "https://res.cloudinary.com/dmz8tsndt/image/upload/v1756945661/Acrodata_Colour_wd3yn5.svg",
 
       images: [
@@ -32,11 +31,10 @@ const OurProducts: React.FC = () => {
         "https://res.cloudinary.com/dmz8tsndt/image/upload/v1757020700/Government_Gazette_xanlov.jpg",
       ],
       color: "#8B5CF6",
-      bgImage: "",
     },
     {
       id: 3,
-      name: "UI/UX Design",
+      name: "Hobart Signwriters",
       icon: "https://res.cloudinary.com/dmz8tsndt/image/upload/v1756948316/HS_Colour_yehdpe.svg",
 
       images: [
@@ -45,7 +43,6 @@ const OurProducts: React.FC = () => {
         "https://res.cloudinary.com/dmz8tsndt/image/upload/v1757367830/Our_Products_2_sauwww.jpg",
       ],
       color: "#EF4444",
-      bgImage: "",
     },
   ];
 
@@ -58,28 +55,27 @@ const OurProducts: React.FC = () => {
   const animationRef = useRef<number>(0);
   const scrollPositionRef = useRef<number>(0);
 
-  // Create scroll pattern - duplicate images for seamless loop
+  // Create scroll pattern - duplicate images for seamless loop (only current division)
   const scrollPattern: ScrollPatternItem[] = React.useMemo(() => {
     const pattern: ScrollPatternItem[] = [];
     const cycles = 3; // Show 3 full cycles for smooth infinite scroll
+    const currentDivision = divisions[currentSlide];
 
     for (let cycle = 0; cycle < cycles; cycle++) {
-      divisions.forEach((division, divisionIndex) => {
-        division.images.forEach((image, imageIndex) => {
-          pattern.push({
-            type: "image",
-            src: image,
-            divisionIndex,
-            imageIndex,
-            key: `${divisionIndex}-${imageIndex}-${cycle}`,
-            cycle,
-          });
+      currentDivision.images.forEach((image, imageIndex) => {
+        pattern.push({
+          type: "image",
+          src: image,
+          divisionIndex: currentSlide,
+          imageIndex,
+          key: `${currentSlide}-${imageIndex}-${cycle}`,
+          cycle,
         });
       });
     }
 
     return pattern;
-  }, [divisions]);
+  }, [divisions, currentSlide]);
 
   const itemWidth = 542 + 20; // width + gap
   const totalWidth =

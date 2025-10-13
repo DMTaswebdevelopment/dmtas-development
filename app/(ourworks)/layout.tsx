@@ -3,5 +3,5 @@ export default function OurWorksLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <div className="our-works-layou h-screen">{children}</div>;
+  return <div className="our-works-layout">{children}</div>;
 }

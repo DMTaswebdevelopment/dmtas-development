@@ -205,19 +205,17 @@ const InquirySection: React.FC = () => {
       />
       <div className="flex flex-col lg:flex-row min-h-screen">
         {/* Left Section - Images */}
-        <div className="w-full lg:w-1/2 bg-blue-300/10 p-4 sm:p-8 flex flex-col gap-6 sm:gap-10 items-center justify-center relative min-h-[50vh] lg:min-h-screen">
-          <div className="h-60 w-full sm:h-72 lg:h-96 lg:w-80 xl:w-[60%] lg:absolute lg:left-16">
-            <Image
-              src="https://res.cloudinary.com/dmz8tsndt/image/upload/v1757020546/geri-sakti-CYrYxz-uvE4-unsplash_rrpxcp.jpg"
-              className="object-cover h-full w-full rounded-xl"
-              height={400}
-              width={600}
-              alt="inquire_image1"
-            />
-          </div>
+        <div className="w-full lg:w-1/2 bg-blue-300/10 flex flex-col items-center justify-center relative min-h-[50vh] lg:min-h-screen">
+          <Image
+            src="https://res.cloudinary.com/dmz8tsndt/image/upload/v1757020546/geri-sakti-CYrYxz-uvE4-unsplash_rrpxcp.jpg"
+            className="object-cover h-full w-full"
+            height={400}
+            width={600}
+            alt="inquire_image1"
+          />
 
           {/* second image */}
-          <div className="h-60 w-full sm:h-72 lg:h-96 lg:absolute lg:top-16 lg:left-64 xl:left-96 xl:top-12 lg:w-72 2xl:left-[70%] rounded-xl overflow-hidden">
+          {/* <div className="h-60 w-full sm:h-72 lg:h-96 lg:absolute lg:top-16 lg:left-64 xl:left-96 xl:top-12 lg:w-72 2xl:left-[70%] rounded-xl overflow-hidden">
             <Image
               src="https://res.cloudinary.com/dmz8tsndt/image/upload/v1757045095/man-working-printing-house-with-paper-paints_lhheeq.jpg"
               className="object-cover h-full w-full"
@@ -225,7 +223,7 @@ const InquirySection: React.FC = () => {
               width={600}
               alt="inquire_image2"
             />
-          </div>
+          </div> */}
         </div>
 
         {/* Right Section - Contact Form */}
@@ -394,7 +392,7 @@ const InquirySection: React.FC = () => {
               <button
                 disabled={isSubmitting}
                 type="submit"
-                className={`bg-black text-white ${isSubmitting ? "cursor-not-allowed" : " cursor-pointer "} w-full sm:w-52 py-3 px-8 font-bold rounded-xl  shadow-lg hover:shadow-2xl hover:shadow-black/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50`}
+                className={`bg-black flex gap-2 items-center justify-center text-white ${isSubmitting ? "cursor-not-allowed" : " cursor-pointer "} w-full sm:w-52 py-3 px-8 font-bold rounded-xl  shadow-lg hover:shadow-2xl hover:shadow-black/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50`}
                 onClick={handleSubmit}
               >
                 {isSubmitting && <LoaderComponent />}

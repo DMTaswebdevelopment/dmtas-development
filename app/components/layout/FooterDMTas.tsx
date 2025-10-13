@@ -43,7 +43,6 @@ const FooterDMTas = () => {
     name: string,
     title: string
   ) => {
-    alert(`ni ari ko goyyyysssss`);
     // Only intercept
     // hash links
     if (title === "Hardware Support") {
@@ -128,9 +127,14 @@ const FooterDMTas = () => {
               <ul className="space-y-4">
                 {section.subTitle.map((item, i) => (
                   <li key={i}>
-                    {item.links ? (
+                    {item.name === "ABN: 52 629 796 103" ? (
+                      // ✅ Render as span if item name is ABN
+                      <span className="text-gray-300 text-sm font-normal font-aktiv tracking-wide">
+                        {item.name}
+                      </span>
+                    ) : item.links ? (
                       section.title === "Hardware Support" ? (
-                        // Render as button instead of Link for Hardware Support
+                        // ✅ Render as button for Hardware Support
                         <button
                           onClick={() =>
                             hardwareSupportHandler(item.name, item.links)
@@ -140,7 +144,7 @@ const FooterDMTas = () => {
                           {item.name}
                         </button>
                       ) : (
-                        // Regular Link for other items
+                        // ✅ Regular Link for other items
                         <Link
                           href={item.links}
                           onClick={(e) =>
@@ -160,6 +164,7 @@ const FooterDMTas = () => {
                         </Link>
                       )
                     ) : (
+                      // ✅ Default text for items without links
                       <span className="text-gray-300 text-sm font-normal font-aktiv tracking-wide">
                         {item.name}
                       </span>
@@ -173,7 +178,7 @@ const FooterDMTas = () => {
       </div>
 
       {/* ISO Certifications */}
-      <div className="hidden md:block px-16 xl:px-[200px] mt-8">
+      <div className="hidden md:block w-full px-7 gap-5 sm:px-10 2xl:px-28 mt-8">
         <div className="flex justify-end gap-[21px]">
           <motion.div
             className="cursor-pointer"

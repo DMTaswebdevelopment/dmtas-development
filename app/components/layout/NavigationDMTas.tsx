@@ -498,11 +498,13 @@ const NavigationDMTas: React.FC = () => {
 
   const handlePuzzleClick = (): void => {
     if (!isLoggedIn) {
+      setMobileMenuOpen(false);
       router.push("/puzzle/login"); // Navigate to "/support"
       event("Variety Puzzle", {
         info: "User's clicked the button Hardware Support",
       });
     } else {
+      setMobileMenuOpen(false);
       router.push("/puzzle/variety"); // Navigate to "/support"
     }
   };
@@ -775,7 +777,7 @@ const NavigationDMTas: React.FC = () => {
 
   const contactUsHandler = (e: React.MouseEvent) => {
     e.preventDefault();
-
+    setMobileMenuOpen(false);
     if (pathname === "/") {
       document.getElementById("inquiry-section")?.scrollIntoView({
         behavior: "smooth",
@@ -1035,7 +1037,7 @@ const NavigationDMTas: React.FC = () => {
                 <ButtonComponent
                   className={`group relative ${
                     isFixed ? "text-white" : "text-[#252324]"
-                  } font-semibold text-sm border p-2 px-1 md:px-2.5 cursor-pointer rounded-xl hover:bg-red-600 hover:text-white transition duration-300 ease-out lg:px-5 2xl:px-8 border-red-600 tracking-normal lg:text-base xl:text-lg font-sans flex items-center justify-center gap-1`}
+                  } font-semibold text-sm border p-2 px-1 md:px-2.5 cursor-pointer rounded-xl hover:bg-red-600 hover:text-white transition duration-300 ease-out lg:px-5 2xl:px-8 border-red-600 tracking-normal lg:text-base xl:text-lg font-montserrat_bold flex items-center justify-center gap-1`}
                   onClick={handlePuzzleClick}
                 >
                   <PuzzleIcon
@@ -1053,7 +1055,7 @@ const NavigationDMTas: React.FC = () => {
                 <button
                   className={`
                   bg-[#007EC6] text-white cursor-pointer font-bold px-1 md:px-2.5 rounded-xl lg:px-5 2xl:px-8 
-                  tracking-wide text-sm lg:text-base font-sans flex items-center justify-center whitespace-nowrap
+                  tracking-wide text-sm lg:text-base font-montserrat_bold flex items-center justify-center whitespace-nowrap
                   relative overflow-hidden py-3
                   transition-all ease-in-out duration-300
                   hover:bg-[#0056b3] hover:scale-105 hover:shadow-lg hover:shadow-[#007EC6]/30
@@ -1117,10 +1119,10 @@ const NavigationDMTas: React.FC = () => {
                   >
                     <div className="w-full px-5">
                       <button
-                        className="flex font-semibold justify-between w-full px-2"
+                        className="flex font-semibold justify-between w-full"
                         onClick={() => setIsServicesOpen((prev) => !prev)}
                       >
-                        Our Services{" "}
+                        Our Brands{" "}
                         <motion.span
                           animate={{ rotate: isServicesOpen ? 90 : 0 }}
                           transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -1199,9 +1201,9 @@ const NavigationDMTas: React.FC = () => {
 
                   <div className="border-b border-gray-300 my-2" />
 
-                  <Link href={"/services/contact/about#top"}>
+                  <Link href={"/products"}>
                     <div className="relative px-5">
-                      <p className="w-full font-semibold">Product (MFP/D) </p>
+                      <p className="w-full font-semibold">Product </p>
 
                       <motion.hr
                         className="absolute bg-black h-1 rounded-full"
@@ -1216,95 +1218,49 @@ const NavigationDMTas: React.FC = () => {
 
                   <div className="border-b border-gray-300 my-2" />
 
-                  <motion.div
-                    className={`cursor-pointer custom-class flex relative`}
-                  >
-                    <div className="w-full px-5">
-                      <button
-                        className="flex font-semibold justify-between w-full px-2"
-                        onClick={() => setIsCompanyOpen((prev) => !prev)}
-                      >
-                        Our Company{" "}
-                        <motion.span
-                          animate={{ rotate: isCompanyOpen ? 90 : 0 }}
-                          transition={{ duration: 0.3, ease: "easeInOut" }}
-                        >
-                          <ChevronRightIcon className={`w-6 h-6 font-bold `} />
-                        </motion.span>
-                      </button>
-                    </div>
-                  </motion.div>
+                  <Link href={"/ourcompany"}>
+                    <div className="relative px-5">
+                      <p className="w-full font-semibold">Our Company </p>
 
-                  {isCompanyOpen && (
-                    <>
-                      <motion.div
-                        className="relative h-auto"
-                        initial={{ height: 0, opacity: 0 }}
+                      <motion.hr
+                        className="absolute bg-black h-1 rounded-full"
                         animate={{
-                          height: isCompanyOpen ? "auto" : 0,
-                          opacity: isCompanyOpen ? 1 : 0,
+                          width: isContactHover ? "100%" : "0%",
+                          opacity: isContactHover ? 1 : 0,
                         }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                      >
-                        <div className="w-full bg-[#EAF1F7] h-72 overflow-visible">
-                          <div className="flex flex-col p-4">
-                            <div className="mb-2">
-                              <h3 className="text-base font-bold mb-2 text-[#252324]/50 font-sans">
-                                OVERVIEW
-                              </h3>
-                              <p className="text-gray-600 font-normal tracking-normal text-sm font-monserrat">
-                                Document Management Tasmania is your one-stop
-                                destination for a comprehensive suite.
-                              </p>
-                            </div>
-                            <div className="relative h-44 bg-white rounded-lg shadow-sm overflow-hidden">
-                              <Image
-                                src={Rectangle157}
-                                alt="Office setup"
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                          </div>
-                        </div>
-
-                        <h2 className="font-sans ml-5 my-5 tracking-wide font-light text-base text-[#868686]">
-                          Products and Services
-                        </h2>
-                        <div className="flex flex-col items-start">
-                          {productsMenu.map((product) => (
-                            <div
-                              key={product.Header}
-                              className={`cursor-pointer transition-colors duration-200 border-b w-full border-gray-300 last:border-b-0 py-3`}
-                              onClick={() => {
-                                setHoverServices(product.Header);
-
-                                // setIsLogoText(true); // Change logo to text
-                              }}
-                            >
-                              <Link
-                                href={product.links}
-                                className="flex ml-10 items-center"
-                                onClick={() => setMobileMenuOpen(false)}
-                              >
-                                <span className="text-lg font-xs text-[#252324] font-sans tracking-wider">
-                                  {product.Header}
-                                </span>
-                                {/* {hoverProduct === product.Header && (
-                              <ArrowRightCircleIcon className="w-4 h-4 ml-2" />
-                            )} */}
-                              </Link>
-                            </div>
-                          ))}
-                        </div>
-                      </motion.div>
-                    </>
-                  )}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                      />
+                    </div>
+                  </Link>
 
                   {/* Border separator */}
                   <div className="border-b border-gray-300 my-2" />
 
-                  <Link href={"/services/contact/about#top"}>
+                  <Link href={"/ourworks/"}>
+                    <div className="relative px-5">
+                      <p className="w-full font-semibold">Our Works</p>
+
+                      <motion.hr
+                        className="absolute bg-black h-1 rounded-full"
+                        animate={{
+                          width: isContactHover ? "100%" : "0%",
+                          opacity: isContactHover ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                      />
+                    </div>
+                  </Link>
+
+                  {/* Border separator */}
+                  <div className="border-b border-gray-300 my-2" />
+
+                  <Link
+                    href="/"
+                    scroll={false} // prevent default scroll
+                    onClick={contactUsHandler}
+                    onMouseEnter={contactsHover}
+                    onMouseLeave={() => setIsContactHover(false)}
+                  >
                     <div className="relative px-5">
                       <p className="w-full font-semibold">Contact Us</p>
 
@@ -1319,28 +1275,28 @@ const NavigationDMTas: React.FC = () => {
                     </div>
                   </Link>
 
-                  {/* Border separator */}
-                  <div className="border-b border-gray-300 my-2" />
-
-                  <Link href={"/services/contact/about#top"}>
-                    <div className="relative px-5">
-                      <p className="w-full font-semibold">Blogs</p>
-
-                      <motion.hr
-                        className="absolute bg-black h-1 rounded-full"
-                        animate={{
-                          width: isContactHover ? "100%" : "0%",
-                          opacity: isContactHover ? 1 : 0,
-                        }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                      />
-                    </div>
-                  </Link>
-
                   <div className="w-full border-t-2 mb-2"></div>
-                  <div className="mt-5 px-5">
+                  <div className="mt-5 px-5 flex flex-col gap-4">
+                    <div className="relative w-full" onMouseEnter={puzzleHover}>
+                      <ButtonComponent
+                        className={`group relative ${
+                          isFixed ? "text-red-600" : "text-[#252324]"
+                        } font-semibold border w-full p-4 px-1 md:px-2.5 cursor-pointer rounded-xl hover:bg-red-600 hover:text-white transition duration-300 ease-out lg:px-5 2xl:px-8 border-red-600 tracking-normal text-base xl:text-lg font-montserrat_bold flex items-center justify-center gap-1`}
+                        onClick={handlePuzzleClick}
+                      >
+                        <PuzzleIcon
+                          className={`w-4 h-4 xl:w-5 xl:h-5  ${
+                            isFixed
+                              ? "text-red-600"
+                              : "text-[#252324] group-hover:text-white"
+                          }`}
+                        />
+                        <span> Puzzles</span>
+                      </ButtonComponent>
+                    </div>
+
                     <ButtonComponent
-                      className=" bg-black text-white font-bold p-4 md:text-base hover:opacity-80 transition w-full tracking-wide ease-in-out duration-300 font-sans flex items-center justify-center gap-3"
+                      className=" bg-black text-white font-bold p-4 md:text-base hover:opacity-80 transition w-full tracking-wide ease-in-out font-montserrat_bold duration-300 flex items-center justify-center gap-3"
                       onClick={handleClick}
                     >
                       Hardware Support
@@ -1641,7 +1597,7 @@ const NavigationDMTas: React.FC = () => {
                 <div className="w-full flex justify-end">
                   <button
                     disabled={isSubmitting}
-                    className={`w-1/3 px-10 ${isSubmitting ? "cursor-not-allowed" : "cursor-allowed"} py-3 rounded-xl  bg-black text-white font-medium shadow-lg hover:shadow-2xl hover:shadow-black/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50`}
+                    className={` w-full lg:w-1/3 px-10 ${isSubmitting ? "cursor-not-allowed" : "cursor-allowed"} py-3 rounded-xl  bg-black text-white font-medium shadow-lg hover:shadow-2xl hover:shadow-black/25 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 ease-out hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-500 focus:ring-opacity-50`}
                     onClick={handleSubmitHander}
                   >
                     {isSubmitting ? (

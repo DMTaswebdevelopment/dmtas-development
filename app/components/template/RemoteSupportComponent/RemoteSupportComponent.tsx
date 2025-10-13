@@ -31,17 +31,17 @@ const RemoteSupportComponent = () => {
     },
   ];
   return (
-    <div className="w-full flex py-16 gap-10 justify-between items-center">
+    <div className="w-full flex flex-wrap py-16 gap-5 lg:gap-10 justify-center items-center">
       {remoteSupports.map((support) => (
         <div
           key={support.id}
-          className="flex flex-col items-center justify-center space-y-5"
+          className="flex flex-col items-center justify-center space-y-5 "
         >
           <Link
             href={support.link}
             target="_blank"
             rel="noopener noreferrer"
-            className="cursor-pointer h-52 w-52 hover:scale-105 transition-transform duration-300"
+            className="cursor-pointer h-20 lg:h-40 xl:h-52 w-auto hover:scale-105 transition-transform duration-300"
           >
             <Image
               src={support.img}
@@ -51,7 +51,7 @@ const RemoteSupportComponent = () => {
               className="h-full w-full object-contain"
             />
           </Link>
-          <span className="text-base font-montserrat_bold">
+          <span className="text-sm lg:text-base font-montserrat_bold">
             {support.description}
           </span>
         </div>
